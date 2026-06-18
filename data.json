@@ -1,0 +1,2124 @@
+[
+  {
+    "name": "Airi",
+    "roles": [
+      "Assassin",
+      "Fighter"
+    ],
+    "lane": [
+      "Jungle",
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Airi_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Aoi",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Aoi_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Aleister",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Aleister_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Alice",
+    "roles": [
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Alice_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Allain",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Allain_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Amily",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer",
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Amily_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Annette",
+    "roles": [
+      "Mage",
+      "Support"
+    ],
+    "lane": [
+      "Mid",
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Annette_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Arduin",
+    "roles": [
+      "Fighter",
+      "Tank"
+    ],
+    "lane": [
+      "Dark Slayer",
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Arduin_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Mortos",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer",
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Mortos_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Ata",
+    "roles": [
+      "Tank"
+    ],
+    "lane": [
+      "Roam",
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Ata_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Aya",
+    "roles": [
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Aya_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Arum",
+    "roles": [
+      "Tank",
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Arum_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Astrid",
+    "roles": [
+      "Assassin",
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Astrid_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Azzen'Ka",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/AzzenKa_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Baldum",
+    "roles": [
+      "Tank",
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Baldum_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Bijan",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Bijan_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Billow",
+    "roles": [
+      "Assassin",
+      "Fighter"
+    ],
+    "lane": [
+      "Jungle",
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Billow_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Biron",
+    "roles": [
+      "Fighter",
+      "Tank"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Biron_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Bonnie",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Bonnie_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Bright",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Bright_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Butterfly",
+    "roles": [
+      "Assassin",
+      "Fighter"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Butterfly_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Capheny",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Capheny_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Celica",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Celica_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Charlotte",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Charlotte_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Chaugnar",
+    "roles": [
+      "Tank",
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Chaugnar_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Cresht",
+    "roles": [
+      "Tank",
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Cresht_0.png"
+      }
+    ]
+  },
+  {
+    "name": "D'Arcy",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid",
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/DArcy_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Dextra",
+    "roles": [
+      "Fighter",
+      "Tank"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Dextra_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Dirak",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Dirak_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Diao Chan",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Diao_Chan_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Dolia",
+    "roles": [
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Dolia_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Dyadia",
+    "roles": [
+      "Mage",
+      "Support"
+    ],
+    "lane": [
+      "Mid",
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Dyadia_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Edras",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Edras_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Eland'orr",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Jungle",
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Elandorr_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Elsu",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Elsu_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Enzo",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Enzo_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Erin",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Erin_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Errol",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Errol_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Fennik",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Fennik_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Florentino",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Florentino_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Flowborn (Mage)",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default Female",
+        "type": "Classic",
+        "image": "images/skins/Flowborn_(Mage)_Female_0.jpg"
+      },
+      {
+        "name": "Default Male",
+        "type": "Classic",
+        "image": "images/skins/Flowborn_(Mage)_Male_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Flowborn (Carry)",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default Female",
+        "type": "Classic",
+        "image": "images/skins/Flowborn_(Carry)_Female_1.jpg"
+      },
+      {
+        "name": "Default Male",
+        "type": "Classic",
+        "image": "images/skins/Flowborn_(Carry)_Male_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Gildur",
+    "roles": [
+      "Mage",
+      "Fighter"
+    ],
+    "lane": [
+      "Mid",
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Gildur_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Goverra",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Goverra_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Grakk",
+    "roles": [
+      "Tank",
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Grakk_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Hayate",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Hayate_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Heino",
+    "roles": [
+      "Mage",
+      "Fighter"
+    ],
+    "lane": [
+      "Mid",
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Heino_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Helen",
+    "roles": [
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Helen_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Iggy",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Iggy_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Ignis",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Ignis_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Ishar",
+    "roles": [
+      "Mage",
+      "Support"
+    ],
+    "lane": [
+      "Mid",
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Ishar_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Ilumia",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Ilumia_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Jinnar",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Jinnar_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Kaine",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Kaine_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Kahlii",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Kahlii_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Keera",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Keera_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Kil'Groth",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/KilGroth_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Kriknak",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Kriknak_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Krixi",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Krixi_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Krizzix",
+    "roles": [
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Krizzix_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Lauriel",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Lauriel_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Laville",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Laville_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Liliana",
+    "roles": [
+      "Mage",
+      "Assassin"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Liliana_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Lindis",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Jungle",
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Lindis_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Lorion",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Lorion_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Lu Bu",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Lu_Bu_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Lumburr",
+    "roles": [
+      "Tank",
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Lumburr_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Maloch",
+    "roles": [
+      "Fighter",
+      "Tank"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Maloch_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Marja",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid",
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Marja_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Max",
+    "roles": [
+      "Tank"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Max_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Mganga",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Mganga_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Mina",
+    "roles": [
+      "Tank",
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Mina_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Ming",
+    "roles": [
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Ming_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Moren",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Moren_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Murad",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Murad_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Nakroth",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Nakroth_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Natalya",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Natalya_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Omega",
+    "roles": [
+      "Tank",
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Omega_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Omen",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Omen_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Ormarr",
+    "roles": [
+      "Tank"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Ormarr_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Paine",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Paine_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Preyta",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Preyta_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Qi",
+    "roles": [
+      "Fighter",
+      "Assassin"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Qi_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Quillen",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Quillen_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Raz",
+    "roles": [
+      "Mage",
+      "Assassin"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Raz_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Riktor",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Riktor_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Roxie",
+    "roles": [
+      "Tank",
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Roxie_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Rouie",
+    "roles": [
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Rouie_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Rourke",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Rourke_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Ryoma",
+    "roles": [
+      "Assassin",
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer",
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Ryoma_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Sephera",
+    "roles": [
+      "Mage",
+      "Support"
+    ],
+    "lane": [
+      "Mid",
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Sephera_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Sinestrea",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Sinestrea_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Bolt Baron",
+    "roles": [
+      "Mage",
+      "Fighter"
+    ],
+    "lane": [
+      "Mid",
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Bolt_Baron_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Skud",
+    "roles": [
+      "Fighter",
+      "Tank"
+    ],
+    "lane": [
+      "Dark Slayer",
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Skud_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Slimz",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Slimz_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Stuart",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Stuart_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Superman",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Roam",
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Superman_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Tachi",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Tachi_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Taara",
+    "roles": [
+      "Tank",
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Taara_0.png"
+      }
+    ]
+  },
+  {
+    "name": "TeeMee",
+    "roles": [
+      "Support",
+      "Tank"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/TeeMee_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Teeri",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Teeri_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Tel'Annas",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/TelAnnas_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Thane",
+    "roles": [
+      "Tank"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Thane_0.png"
+      }
+    ]
+  },
+  {
+    "name": "The Flash",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Mid",
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/The_Flash_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Thorne",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Thorne_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Toro",
+    "roles": [
+      "Tank",
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Toro_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Tulen",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Tulen_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Valhein",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Valhein_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Veera",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Veera_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Veres",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Veres_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Violet",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Violet_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Volkath",
+    "roles": [
+      "Fighter",
+      "Assassin"
+    ],
+    "lane": [
+      "Dark Slayer",
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Volkath_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Wiro",
+    "roles": [
+      "Tank",
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer",
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Wiro_Sableng_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Wisp",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Wisp_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Wonder Woman",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Wonder_Woman_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Wukong",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Wukong_0.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Xeniel",
+    "roles": [
+      "Tank",
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Xeniel_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Yan",
+    "roles": [
+      "Assassin",
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer",
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Yan_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Y'bneth",
+    "roles": [
+      "Tank"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Ybneth_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Yena",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Yena_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Yorn",
+    "roles": [
+      "Carry"
+    ],
+    "lane": [
+      "Abyssal Dragon"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Yorn_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Yue",
+    "roles": [
+      "Mage"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Yue_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Zanis",
+    "roles": [
+      "Fighter"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Zanis_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Zata",
+    "roles": [
+      "Mage",
+      "Assassin"
+    ],
+    "lane": [
+      "Mid"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Zata_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Zephys",
+    "roles": [
+      "Assassin",
+      "Fighter"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Zephys_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Zill",
+    "roles": [
+      "Assassin"
+    ],
+    "lane": [
+      "Jungle"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Zill_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Zip",
+    "roles": [
+      "Support"
+    ],
+    "lane": [
+      "Roam"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Zip_0.png"
+      }
+    ]
+  },
+  {
+    "name": "Zuka",
+    "roles": [
+      "Assassin",
+      "Fighter"
+    ],
+    "lane": [
+      "Jungle",
+      "Dark Slayer"
+    ],
+    "skins": [
+      {
+        "name": "Default",
+        "type": "Classic",
+        "image": "images/skins/Zuka_0.png"
+      }
+    ]
+  }
+]
