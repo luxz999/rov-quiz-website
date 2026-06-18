@@ -421,13 +421,25 @@
   }
   
   .hint-info{
-    display:flex;flex-direction:column;gap:6px;margin-bottom:12px;
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    gap:8px 20px;
+    margin-bottom:12px;
     font-size:13px;
+    justify-content:center;
+    align-items:center;
   }
   .hint-info-item{
-    display:flex;align-items:center;gap:8px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:rgba(0,0,0,.15);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:4px 10px;
   }
-  .hint-info-label{color:var(--muted);min-width:60px}
+  .hint-info-label{color:var(--muted);font-weight:600}
   .hint-info-value{color:var(--gold);font-weight:600}
   .hint-info-value.hidden{color:var(--muted);font-style:italic;font-weight:400}
   .hint-buttons{
@@ -653,6 +665,7 @@
     .hm-char,.hm-hidden{width:22px;height:30px}
     .hm-space{width:10px;height:30px}
     .submit-btn{padding:0 20px;min-width:90px;font-size:14px}
+    .hint-info{gap:6px 12px;font-size:12px}
   }
 </style>
 </head>
@@ -852,6 +865,7 @@ let revealedLetters = new Set();
 let hintPenalty = 0;
 let audioCtx = null;
 let lastInputValue = '';
+let revealAnimId = null; // [เพิ่ม] สำหรับเก็บ animation ID ของ reveal
 
 // ---- AUDIO SYSTEM ----
 function initAudio(){
@@ -950,7 +964,6 @@ function playSound(type){
         break;
       }
       case 'invalid': {
-        // [เพิ่ม] เสียงเตือนเมื่อพิมพ์ชื่อที่ไม่ใช่ตัวละคร
         playNote(500, now, 0.1, 0.05, 'square');
         playNote(400, now + 0.1, 0.15, 0.05, 'square');
         break;
@@ -984,7 +997,6 @@ function createConfetti(){
   }
 }
 
-// [เพิ่ม] Animation สำหรับ input ที่ invalid
 function shakeInput(){
   const wrap = document.getElementById('input-wrap');
   wrap.classList.remove('invalid');
@@ -1144,6 +1156,12 @@ function loadQuestion(){
   revealedLetters.clear();
   hintPenalty = 0;
   lastInputValue = '';
+  
+  // [เพิ่ม] ยกเลิก reveal animation ถ้ายังมีอยู่
+  if(revealAnimId){
+    cancelAnimationFrame(revealAnimId);
+    revealAnimId = null;
+  }
 
   const img = document.getElementById('hero-img');
   if(img){
@@ -1304,7 +1322,6 @@ document.getElementById('guess-input').addEventListener('blur',()=>{
   setTimeout(()=>{ document.getElementById('suggestions').style.display='none'; },150);
 });
 
-// [แก้] submitGuess - ตรวจสอบว่าชื่อที่พิมพ์เป็นตัวละครจริงหรือไม่
 function submitGuess(){
   if(revealed) return;
   const input=document.getElementById('guess-input');
@@ -1314,23 +1331,19 @@ function submitGuess(){
   lastInputValue = '';
   document.getElementById('suggestions').style.display='none';
 
-  // [เพิ่ม] ตรวจสอบว่าชื่อที่พิมพ์เป็นตัวละครในระบบหรือไม่
   const normalizedVal = norm(val);
   const matchedHero = allHeroes.find(h => norm(h.name) === normalizedVal);
   
   if(!matchedHero){
-    // ชื่อไม่ใช่ตัวละครในระบบ → ไม่ส่งคำตอบ, ไม่หักคะแนน
     showFeedback('invalid',`"${val}" ไม่ใช่ชื่อตัวละครในระบบ`);
     shakeInput();
     playSound('invalid');
-    // คืนค่ากลับให้ผู้ใช้เห็นและแก้
     input.value = val;
     input.focus();
     input.select();
     return;
   }
   
-  // [เพิ่ม] ตรวจสอบว่าเคยพิมพ์ผิดไปแล้วหรือยัง
   if(wrongGuesses.map(norm).includes(normalizedVal)){
     showFeedback('invalid',`"${val}" เคยพิมพ์ไปแล้ว`);
     shakeInput();
@@ -1339,7 +1352,6 @@ function submitGuess(){
     return;
   }
 
-  // ตรวจสอบคำตอบ
   if(normalizedVal === norm(current.name)){
     const pts=Math.max(1, MAX_ATTEMPTS + 1 - wrongGuesses.length - hintPenalty);
     score+=pts;
@@ -1385,6 +1397,149 @@ function showFeedback(type,msg){
   if(type==='wrong' || type==='invalid') el._t=setTimeout(()=>el.classList.remove('show'),2000);
 }
 
+// [แก้] อ่านค่า scale จริงจาก transform matrix ของ element
+function getActualScale(element){
+  const transform = window.getComputedStyle(element).transform;
+  if(transform === 'none'){
+    return 1;
+  }
+  // matrix(a, b, c, d, tx, ty) หรือ matrix3d(...)
+  const values = transform.match(/matrix(?:3d)?\(([^)]+)\)/);
+  if(!values) return 1;
+  const parts = values[1].split(',').map(parseFloat);
+  // scale = sqrt(a^2 + b^2) สำหรับ 2D
+  if(parts.length >= 6){
+    const a = parts[0];
+    const b = parts[1];
+    return Math.sqrt(a*a + b*b);
+  }
+  return 1;
+}
+
+// [เพิ่ม] Animation loop สำหรับ reveal - อัปเดต blur/pixel ค่อยๆ ตาม scale จริง
+function startRevealAnimation(){
+  const img = document.getElementById('hero-img');
+  const canvas = document.getElementById('pixel-canvas');
+  const hasBlur = activeFilters.has('blur');
+  const hasPixel = activeFilters.has('pixel');
+  
+  // ถ้าไม่มีฟิลเตอร์ blur หรือ pixel ก็ไม่ต้อง animate
+  if(!hasBlur && !hasPixel){
+    return;
+  }
+  
+  // เก็บ scale เริ่มต้นก่อน transition
+  const startScale = getActualScale(img);
+  const targetScale = ZOOM_END;
+  const startTime = performance.now();
+  const duration = 1200; // ตรงกับ transition duration
+  
+  function animateFrame(currentTime){
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // คำนวณ scale ปัจจุบันแบบ interpolate (ใช้ easing เดียวกับ CSS)
+    // cubic-bezier(.25,.46,.45,.94) ≈ ease-out
+    const eased = 1 - Math.pow(1 - progress, 2.5);
+    const currentScale = startScale + (targetScale - startScale) * eased;
+    
+    // คำนวณ blur และ pixel จาก scale ปัจจุบัน
+    const t = (ZOOM_START - currentScale) / (ZOOM_START - ZOOM_END);
+    const clampedT = Math.max(0, Math.min(1, t));
+    const blurVal = BLUR_MIN + (BLUR_MAX - BLUR_MIN) * clampedT;
+    const pixelSize = PIXEL_SIZE_MIN + (PIXEL_SIZE_MAX - PIXEL_SIZE_MIN) * clampedT;
+    
+    // อัปเดต blur filter
+    if(hasBlur){
+      let cssFilters = [];
+      activeFilters.forEach(k=>{
+        if(k === 'blur'){
+          cssFilters.push(`blur(${blurVal.toFixed(2)}px)`);
+        } else if(FILTERS_DEF[k] && FILTERS_DEF[k].css){
+          cssFilters.push(FILTERS_DEF[k].css);
+        }
+      });
+      img.style.filter = cssFilters.join(' ');
+      if(hasPixel){
+        canvas.style.filter = cssFilters.join(' ');
+      }
+    }
+    
+    // อัปเดต pixel canvas
+    if(hasPixel){
+      drawPixelCanvasWithScale(currentScale, pixelSize);
+    }
+    
+    // ทำต่อไปจนกว่าจะจบ
+    if(progress < 1){
+      revealAnimId = requestAnimationFrame(animateFrame);
+    } else {
+      revealAnimId = null;
+      // ทำ final apply เพื่อ sync state
+      applyImageFilters();
+    }
+  }
+  
+  revealAnimId = requestAnimationFrame(animateFrame);
+}
+
+// [เพิ่ม] วาด pixel canvas ด้วย scale ที่กำหนด (สำหรับ animation)
+function drawPixelCanvasWithScale(scale, pixelSize){
+  const img = document.getElementById('hero-img');
+  const canvas = document.getElementById('pixel-canvas');
+  const wrapper = document.getElementById('img-wrapper');
+  const W = wrapper.offsetWidth || 480;
+  const H = wrapper.offsetHeight || 480;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const factor = scale>1?(scale-1)/(ZOOM_START-1):0;
+  const ix = (img._ix||0)*factor / 100;
+  const iy = (img._iy||0)*factor / 100;
+  const fx = (img._flipX||1);
+  const fy = (img._flipY||1);
+
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = W;
+  tempCanvas.height = H;
+  const tempCtx = tempCanvas.getContext('2d');
+
+  const imgAR = img.naturalWidth / img.naturalHeight;
+  const wrapAR = W / H;
+  let sx, sy, sw, sh;
+  if (imgAR > wrapAR) {
+    sh = img.naturalHeight;
+    sw = sh * wrapAR;
+    sx = (img.naturalWidth - sw) / 2;
+    sy = 0;
+  } else {
+    sw = img.naturalWidth;
+    sh = sw / wrapAR;
+    sx = 0;
+    sy = (img.naturalHeight - sh) / 2;
+  }
+  tempCtx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
+
+  const PIXEL_SIZE = Math.max(1, Math.floor(pixelSize));
+  const pW = Math.max(1, Math.ceil(W / PIXEL_SIZE));
+  const pH = Math.max(1, Math.ceil(H / PIXEL_SIZE));
+  const pixelCanvas = document.createElement('canvas');
+  pixelCanvas.width = pW;
+  pixelCanvas.height = pH;
+  const pixelCtx = pixelCanvas.getContext('2d');
+  pixelCtx.imageSmoothingEnabled = false;
+  pixelCtx.drawImage(tempCanvas, 0, 0, W, H, 0, 0, pW, pH);
+
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  ctx.translate(W/2, H/2);
+  ctx.scale(scale * fx, scale * fy);
+  ctx.translate(-W/2 + ix * W, -H/2 + iy * H);
+  ctx.drawImage(pixelCanvas, 0, 0, pW, pH, 0, 0, W, H);
+  ctx.restore();
+}
+
 function revealAnswer(correct){
   revealed=true;
   const img=document.getElementById('hero-img');
@@ -1403,6 +1558,11 @@ function revealAnswer(correct){
 
   updateHangmanDisplay(true);
   playSound('reveal');
+
+  // [แก้] เริ่ม animation ของ blur/pixel ค่อยๆ เปลี่ยนไปพร้อมกับการซูมออก
+  if(activeFilters && activeFilters.size > 0){
+    startRevealAnimation();
+  }
 
   const banner=document.getElementById('reveal-banner');
   banner.style.display='flex';
@@ -1741,71 +1901,9 @@ function schedulePixelDraw(){
 }
 
 function drawPixelCanvas(){
-  const img = document.getElementById('hero-img');
-  const canvas = document.getElementById('pixel-canvas');
-  const wrapper = document.getElementById('img-wrapper');
-  const W = wrapper.offsetWidth || 480;
-  const H = wrapper.offsetHeight || 480;
-  canvas.width = W;
-  canvas.height = H;
-  const ctx = canvas.getContext('2d');
-
   const scale = getCurrentScale();
-  const factor = scale>1?(scale-1)/(ZOOM_START-1):0;
-  const ix = (img._ix||0)*factor / 100;
-  const iy = (img._iy||0)*factor / 100;
-  const fx = (img._flipX||1);
-  const fy = (img._flipY||1);
-
-  const tempCanvas = document.createElement('canvas');
-  tempCanvas.width = W;
-  tempCanvas.height = H;
-  const tempCtx = tempCanvas.getContext('2d');
-
-  const imgAR = img.naturalWidth / img.naturalHeight;
-  const wrapAR = W / H;
-  let sx, sy, sw, sh;
-  if (imgAR > wrapAR) {
-    sh = img.naturalHeight;
-    sw = sh * wrapAR;
-    sx = (img.naturalWidth - sw) / 2;
-    sy = 0;
-  } else {
-    sw = img.naturalWidth;
-    sh = sw / wrapAR;
-    sx = 0;
-    sy = (img.naturalHeight - sh) / 2;
-  }
-  tempCtx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
-
-  const PIXEL_SIZE = Math.max(1, Math.floor(getDynamicPixelSize()));
-  const pW = Math.max(1, Math.ceil(W / PIXEL_SIZE));
-  const pH = Math.max(1, Math.ceil(H / PIXEL_SIZE));
-  const pixelCanvas = document.createElement('canvas');
-  pixelCanvas.width = pW;
-  pixelCanvas.height = pH;
-  const pixelCtx = pixelCanvas.getContext('2d');
-  pixelCtx.imageSmoothingEnabled = false;
-  pixelCtx.drawImage(tempCanvas, 0, 0, W, H, 0, 0, pW, pH);
-
-  ctx.save();
-  ctx.imageSmoothingEnabled = false;
-  ctx.translate(W/2, H/2);
-  ctx.scale(scale * fx, scale * fy);
-  ctx.translate(-W/2 + ix * W, -H/2 + iy * H);
-  ctx.drawImage(pixelCanvas, 0, 0, pW, pH, 0, 0, W, H);
-  ctx.restore();
-
-  let cssFilters = [];
-  const blurVal = getDynamicBlur();
-  activeFilters.forEach(k=>{
-    if(k === 'blur') {
-      cssFilters.push(`blur(${blurVal.toFixed(2)}px)`);
-    } else if(k !== 'pixel' && FILTERS_DEF[k] && FILTERS_DEF[k].css) {
-      cssFilters.push(FILTERS_DEF[k].css);
-    }
-  });
-  canvas.style.filter = cssFilters.join(' ');
+  const pixelSize = getDynamicPixelSize();
+  drawPixelCanvasWithScale(scale, pixelSize);
 }
 
 function resetFiltersForNewQuestion(){
@@ -1821,6 +1919,10 @@ function resetFiltersForNewQuestion(){
 
 document.getElementById('next-btn').addEventListener('click',()=>{
   clearTimeout(pixelTimer);
+  if(revealAnimId){
+    cancelAnimationFrame(revealAnimId);
+    revealAnimId = null;
+  }
   resetFiltersForNewQuestion();
 }, true);
 
