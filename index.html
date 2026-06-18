@@ -750,9 +750,9 @@
         </div>
       </div>
       <div class="hint-buttons">
-        <button class="hint-btn" id="hint-btn-role">ดูตำแหน่ง</button>
-        <button class="hint-btn" id="hint-btn-lane">ดูเลน</button>
-        <button class="hint-btn" id="hint-btn-letter">สุ่มตัวอักษร</button>
+        <button class="hint-btn" id="hint-btn-role">ดูตำแหน่ง (-1)</button>
+        <button class="hint-btn" id="hint-btn-lane">ดูเลน (-1)</button>
+        <button class="hint-btn" id="hint-btn-letter">สุ่มตัวอักษร (-2)</button>
       </div>
     </div>
 
@@ -845,7 +845,7 @@ let revealedLetters = new Set();
 let hintPenalty = 0;
 let audioCtx = null;
 let lastInputValue = '';
-let revealAnimId = null; // [เพิ่ม] สำหรับเก็บ animation ID ของ reveal
+let revealAnimId = null;
 
 // ---- AUDIO SYSTEM ----
 function initAudio(){
@@ -1137,7 +1137,6 @@ function loadQuestion(){
   hintPenalty = 0;
   lastInputValue = '';
   
-  // [เพิ่ม] ยกเลิก reveal animation ถ้ายังมีอยู่
   if(revealAnimId){
     cancelAnimationFrame(revealAnimId);
     revealAnimId = null;
@@ -1172,15 +1171,15 @@ function loadQuestion(){
   
   document.getElementById('hint-btn-role').disabled=false;
   document.getElementById('hint-btn-role').classList.remove('used');
-  document.getElementById('hint-btn-role').textContent='ดูตำแหน่ง';
+  document.getElementById('hint-btn-role').textContent='ดูตำแหน่ง (-1)';
   
   document.getElementById('hint-btn-lane').disabled=false;
   document.getElementById('hint-btn-lane').classList.remove('used');
-  document.getElementById('hint-btn-lane').textContent='ดูเลน';
+  document.getElementById('hint-btn-lane').textContent='ดูเลน (-1)';
   
   document.getElementById('hint-btn-letter').disabled=false;
   document.getElementById('hint-btn-letter').classList.remove('used');
-  document.getElementById('hint-btn-letter').textContent='สุ่มตัวอักษร';
+  document.getElementById('hint-btn-letter').textContent='สุ่มตัวอักษร (-2)';
   
   updateHangmanDisplay();
   renderDots(0, false);
@@ -1377,17 +1376,14 @@ function showFeedback(type,msg){
   if(type==='wrong' || type==='invalid') el._t=setTimeout(()=>el.classList.remove('show'),2000);
 }
 
-// [แก้] อ่านค่า scale จริงจาก transform matrix ของ element
 function getActualScale(element){
   const transform = window.getComputedStyle(element).transform;
   if(transform === 'none'){
     return 1;
   }
-  // matrix(a, b, c, d, tx, ty) หรือ matrix3d(...)
   const values = transform.match(/matrix(?:3d)?\(([^)]+)\)/);
   if(!values) return 1;
   const parts = values[1].split(',').map(parseFloat);
-  // scale = sqrt(a^2 + b^2) สำหรับ 2D
   if(parts.length >= 6){
     const a = parts[0];
     const b = parts[1];
@@ -1396,40 +1392,33 @@ function getActualScale(element){
   return 1;
 }
 
-// [เพิ่ม] Animation loop สำหรับ reveal - อัปเดต blur/pixel ค่อยๆ ตาม scale จริง
 function startRevealAnimation(){
   const img = document.getElementById('hero-img');
   const canvas = document.getElementById('pixel-canvas');
   const hasBlur = activeFilters.has('blur');
   const hasPixel = activeFilters.has('pixel');
   
-  // ถ้าไม่มีฟิลเตอร์ blur หรือ pixel ก็ไม่ต้อง animate
   if(!hasBlur && !hasPixel){
     return;
   }
   
-  // เก็บ scale เริ่มต้นก่อน transition
   const startScale = getActualScale(img);
   const targetScale = ZOOM_END;
   const startTime = performance.now();
-  const duration = 1200; // ตรงกับ transition duration
+  const duration = 1200;
   
   function animateFrame(currentTime){
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
     
-    // คำนวณ scale ปัจจุบันแบบ interpolate (ใช้ easing เดียวกับ CSS)
-    // cubic-bezier(.25,.46,.45,.94) ≈ ease-out
     const eased = 1 - Math.pow(1 - progress, 2.5);
     const currentScale = startScale + (targetScale - startScale) * eased;
     
-    // คำนวณ blur และ pixel จาก scale ปัจจุบัน
     const t = (ZOOM_START - currentScale) / (ZOOM_START - ZOOM_END);
     const clampedT = Math.max(0, Math.min(1, t));
     const blurVal = BLUR_MIN + (BLUR_MAX - BLUR_MIN) * clampedT;
     const pixelSize = PIXEL_SIZE_MIN + (PIXEL_SIZE_MAX - PIXEL_SIZE_MIN) * clampedT;
     
-    // อัปเดต blur filter
     if(hasBlur){
       let cssFilters = [];
       activeFilters.forEach(k=>{
@@ -1445,17 +1434,14 @@ function startRevealAnimation(){
       }
     }
     
-    // อัปเดต pixel canvas
     if(hasPixel){
       drawPixelCanvasWithScale(currentScale, pixelSize);
     }
     
-    // ทำต่อไปจนกว่าจะจบ
     if(progress < 1){
       revealAnimId = requestAnimationFrame(animateFrame);
     } else {
       revealAnimId = null;
-      // ทำ final apply เพื่อ sync state
       applyImageFilters();
     }
   }
@@ -1463,7 +1449,6 @@ function startRevealAnimation(){
   revealAnimId = requestAnimationFrame(animateFrame);
 }
 
-// [เพิ่ม] วาด pixel canvas ด้วย scale ที่กำหนด (สำหรับ animation)
 function drawPixelCanvasWithScale(scale, pixelSize){
   const img = document.getElementById('hero-img');
   const canvas = document.getElementById('pixel-canvas');
@@ -1539,7 +1524,6 @@ function revealAnswer(correct){
   updateHangmanDisplay(true);
   playSound('reveal');
 
-  // [แก้] เริ่ม animation ของ blur/pixel ค่อยๆ เปลี่ยนไปพร้อมกับการซูมออก
   if(activeFilters && activeFilters.size > 0){
     startRevealAnimation();
   }
@@ -1603,7 +1587,7 @@ document.getElementById('hint-btn-role').addEventListener('click',()=>{
   el.classList.remove('hidden');
   document.getElementById('hint-btn-role').disabled=true;
   document.getElementById('hint-btn-role').classList.add('used');
-  document.getElementById('hint-btn-role').textContent='✓ ดูแล้ว';
+  document.getElementById('hint-btn-role').textContent='✓ ดูแล้ว (-1)';
   hintPenalty += 1;
   playSound('hint');
 });
@@ -1615,7 +1599,7 @@ document.getElementById('hint-btn-lane').addEventListener('click',()=>{
   el.classList.remove('hidden');
   document.getElementById('hint-btn-lane').disabled=true;
   document.getElementById('hint-btn-lane').classList.add('used');
-  document.getElementById('hint-btn-lane').textContent='✓ ดูแล้ว';
+  document.getElementById('hint-btn-lane').textContent='✓ ดูแล้ว (-1)';
   hintPenalty += 1;
   playSound('hint');
 });
@@ -1632,7 +1616,7 @@ document.getElementById('hint-btn-letter').addEventListener('click',()=>{
   if(unrevealed.length===0){
     document.getElementById('hint-btn-letter').disabled=true;
     document.getElementById('hint-btn-letter').classList.add('used');
-    document.getElementById('hint-btn-letter').textContent='✓ ครบแล้ว';
+    document.getElementById('hint-btn-letter').textContent='✓ ครบแล้ว (-2)';
     return;
   }
   const randIdx = unrevealed[Math.floor(Math.random()*unrevealed.length)];
@@ -1644,7 +1628,7 @@ document.getElementById('hint-btn-letter').addEventListener('click',()=>{
   if(revealedLetters.size >= name.replace(/\s/g,'').length){
     document.getElementById('hint-btn-letter').disabled=true;
     document.getElementById('hint-btn-letter').classList.add('used');
-    document.getElementById('hint-btn-letter').textContent='✓ ครบแล้ว';
+    document.getElementById('hint-btn-letter').textContent='✓ ครบแล้ว (-2)';
   }
 });
 
