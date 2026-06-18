@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROV Hero Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Noto+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #0a0c12;
+    --surface: #111420;
+    --card:    #181d2e;
+    --border:  #252d45;
+    --accent:  #4f8ef7;
+    --gold:    #f0c040;
+    --red:     #e05555;
+    --green:   #3ecf8e;
+    --orange:  #f08c40;
+    --text:    #e8eaf0;
+    --muted:   #7a82a0;
+    --glow:    rgba(79,142,247,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{height:100%}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:'Noto Sans Thai','Rajdhani',sans-serif;
+    min-height:100vh;overflow-x:hidden;user-select:none;
+  }
+  body::before{
+    content:'';position:fixed;inset:0;
+    background-image:
+      linear-gradient(rgba(79,142,247,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(79,142,247,.04) 1px,transparent 1px);
+    background-size:40px 40px;pointer-events:none;z-index:0;
+  }
+  #app{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 16px 48px}
+
+  #loading{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:60vh;gap:16px;
+  }
+  .spinner{
+    width:40px;height:40px;border-radius:50%;
+    border:3px solid var(--border);
+    border-top-color:var(--accent);
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .load-err{color:var(--red);text-align:center;font-size:14px;line-height:1.7}
+
+  header{text-align:center;padding:36px 0 28px}
+  header .logo{
+    font-family:'Rajdhani',sans-serif;
+    font-size:clamp(28px,6vw,52px);font-weight:700;letter-spacing:.05em;
+    background:linear-gradient(135deg,#6fb4ff,#4f8ef7 40%,#a78bfa);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  header .sub{color:var(--muted);font-size:13px;margin-top:6px;letter-spacing:.08em;text-transform:uppercase}
+
+  #setup{display:none;flex-direction:column;gap:24px;position:relative;z-index:100;}
+  #setup-settings-btn{position:relative;z-index:10001;}
+  .section-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .count-grid{display:flex;flex-wrap:wrap;gap:10px}
+  .count-btn{
+    flex:1;min-width:70px;background:var(--card);border:1px solid var(--border);
+    color:var(--muted);border-radius:8px;padding:12px 0;
+    font-family:inherit;font-size:18px;font-weight:600;cursor:pointer;transition:all .15s;
+  }
+  .count-btn:hover{border-color:var(--accent);color:var(--text);transform:translateY(-2px)}
+  .count-btn.active{background:rgba(79,142,247,.15);border-color:var(--accent);color:var(--accent);box-shadow:0 0 14px var(--glow)}
+  .tab-row{display:flex;flex-wrap:wrap;gap:8px}
+  .filter-type-btn,.filter-val-btn{
+    background:var(--card);border:1px solid var(--border);
+    color:var(--muted);border-radius:6px;padding:8px 14px;
+    font-family:inherit;font-size:13px;cursor:pointer;transition:all .15s;
+  }
+  .filter-type-btn.active{background:rgba(79,142,247,.15);border-color:var(--accent);color:var(--accent)}
+  .filter-val-btn.active{
+    background:rgba(240,192,64,.12);
+    border-color:var(--gold);
+    color:var(--gold);
+    box-shadow:0 0 10px rgba(240,192,64,.2);
+  }
+  .filter-val-btn:hover{border-color:var(--accent);color:var(--text)}
+  .filter-clear-btn{
+    background:none;
+    border:1px solid var(--border);
+    color:var(--muted);
+    border-radius:6px;
+    padding:6px 12px;
+    font-family:inherit;
+    font-size:11px;
+    cursor:pointer;
+    transition:all .15s;
+    margin-left:auto;
+  }
+  .filter-clear-btn:hover{border-color:var(--red);color:var(--red)}
+  .filter-clear-btn:disabled{opacity:.3;cursor:not-allowed}
+  .filter-values-header{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:8px;
+    font-size:11px;
+    color:var(--muted);
+  }
+  .filter-count-badge{
+    background:rgba(240,192,64,.15);
+    border:1px solid rgba(240,192,64,.3);
+    color:var(--gold);
+    border-radius:10px;
+    padding:2px 8px;
+    font-size:10px;
+    font-weight:600;
+  }
+  #filter-values{min-height:44px}
+  .start-btn{
+    width:100%;padding:16px;
+    background:linear-gradient(135deg,#4f8ef7,#7c3aed);
+    border:none;border-radius:10px;color:#fff;
+    font-family:inherit;font-size:18px;font-weight:700;letter-spacing:.06em;
+    cursor:pointer;transition:opacity .15s,transform .1s;
+    box-shadow:0 4px 24px rgba(79,142,247,.4);
+  }
+  .start-btn:hover{opacity:.88;transform:translateY(-1px)}
+  .start-btn:active{transform:translateY(0)}
+  .start-btn:disabled{opacity:.4;cursor:not-allowed}
+
+  #game{display:none;flex-direction:column;gap:0}
+  .game-topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 0 18px;flex-wrap:wrap;gap:8px;
+  }
+  .score-pill{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:20px;padding:6px 16px;font-size:13px;
+  }
+  .score-pill span{color:var(--accent);font-weight:700}
+  .progress-pill{color:var(--muted);font-size:13px}
+  .top-right-btns{display:flex;gap:8px;align-items:center}
+  .settings-btn,.end-game-btn{
+    width:36px;height:36px;border-radius:8px;
+    border:1px solid var(--border);
+    background:var(--card);color:var(--muted);
+    cursor:pointer;transition:.25s;
+    font-family:inherit;
+  }
+  .settings-btn:hover{transform:rotate(90deg);color:var(--accent);}
+  .end-game-btn{
+    width:auto;padding:0 12px;font-size:12px;font-weight:600;
+  }
+  .end-game-btn:hover{border-color:var(--red);color:var(--red)}
+  .skip-btn{
+    background:none;border:1px solid var(--border);
+    color:var(--muted);border-radius:6px;padding:6px 12px;
+    font-family:inherit;font-size:12px;cursor:pointer;transition:all .15s;
+  }
+  .skip-btn:hover{border-color:var(--red);color:var(--red)}
+  #reveal-hint-btn{
+    display:none;
+    background:rgba(240,140,64,.12);border:1px solid rgba(240,140,64,.45);
+    color:var(--orange);border-radius:6px;padding:6px 12px;
+    font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;
+    transition:all .15s;animation:pulse-orange 1.5s ease-in-out infinite;
+  }
+  #reveal-hint-btn:hover{background:rgba(240,140,64,.25)}
+  @keyframes pulse-orange{
+    0%,100%{box-shadow:0 0 0 0 rgba(240,140,64,.4)}
+    50%{box-shadow:0 0 0 6px rgba(240,140,64,0)}
+  }
+  .prog-bar-wrap{height:3px;background:var(--border);border-radius:3px;margin-bottom:20px}
+  .prog-bar-fill{height:100%;background:linear-gradient(90deg,#4f8ef7,#a78bfa);border-radius:3px;transition:width .4s ease}
+
+  .attempt-dots{
+    display:flex;gap:6px;align-items:center;justify-content:center;
+    margin-bottom:16px;
+  }
+  .dot{
+    width:10px;height:10px;border-radius:50%;
+    background:var(--border);border:1px solid var(--border);
+    transition:background .2s,border-color .2s;
+  }
+  .dot.used{background:var(--red);border-color:var(--red)}
+  .dot.correct{background:var(--green);border-color:var(--green)}
+  .dot-label{font-size:11px;color:var(--muted);margin-left:4px}
+
+  .img-wrapper{
+    position:relative;width:100%;max-width:480px;margin:0 auto;
+    aspect-ratio:1/1;border-radius:16px;overflow:hidden;
+    border:1px solid var(--border);background:var(--card);
+    box-shadow:0 8px 40px rgba(0,0,0,.6);
+    transition:transform .3s;
+  }
+  .img-wrapper img{
+    width:100%;height:100%;object-fit:cover;
+    transform:scale(10) translate(var(--ix,0%),var(--iy,0%));
+    transition:transform 1.2s cubic-bezier(.25,.46,.45,.94);
+    pointer-events:none;-webkit-user-drag:none;
+    position:relative;z-index:1;
+  }
+  .img-overlay{position:absolute;inset:0;z-index:2;background:transparent}
+  .hint-badge{
+    position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+    background:rgba(0,0,0,.65);backdrop-filter:blur(4px);
+    border:1px solid var(--border);border-radius:20px;
+    padding:5px 14px;font-size:12px;color:var(--muted);
+    z-index:3;white-space:nowrap;
+  }
+
+  .img-filter-panel{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:90%;
+    max-width:500px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    overflow:hidden;
+    z-index:99999;
+    display:none;
+    box-shadow:0 20px 60px rgba(0,0,0,.8);
+    animation:modalIn .3s cubic-bezier(.25,.46,.45,.94);
+  }
+  @keyframes modalIn{
+    from{opacity:0;transform:translate(-50%,-50%) scale(.9)}
+    to{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  }
+  .img-filter-panel::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    backdrop-filter:blur(8px);
+    z-index:-1;
+  }
+  .img-filter-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 20px;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(135deg,rgba(79,142,247,.1),rgba(167,139,250,.1));
+  }
+  .img-filter-title{
+    font-size:14px;
+    font-weight:700;
+    color:var(--accent);
+    letter-spacing:.05em;
+  }
+  .img-filter-close{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-size:20px;
+    cursor:pointer;
+    transition:color .2s;
+    padding:0;
+    line-height:1;
+  }
+  .img-filter-close:hover{color:var(--red)}
+  .img-filter-body{
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .img-filter-active-badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    min-height:32px;
+    padding:8px 10px;
+    background:rgba(0,0,0,.25);
+    border-radius:8px;
+    border:1px dashed var(--border);
+    align-items:center;
+  }
+  .filter-badge{
+    background:linear-gradient(135deg,rgba(167,139,250,.2),rgba(79,142,247,.2));
+    border:1px solid rgba(167,139,250,.5);
+    color:#a78bfa;
+    border-radius:6px;
+    padding:4px 10px;
+    font-size:11px;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    animation:badgeIn .25s ease;
+  }
+  .filter-badge::before{
+    content:'✓';
+    font-size:10px;
+    color:var(--green);
+    font-weight:700;
+  }
+  @keyframes badgeIn{
+    from{opacity:0;transform:scale(.7) translateY(-4px)}
+    to{opacity:1;transform:scale(1) translateY(0)}
+  }
+  .no-filter-text{
+    color:var(--muted);
+    font-size:11px;
+    font-style:italic;
+    opacity:.7;
+  }
+  .flt-row{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(100px,1fr));
+    gap:10px;
+  }
+  .flt-btn{
+    background:var(--surface);
+    border:2px solid var(--border);
+    color:var(--muted);
+    border-radius:10px;
+    padding:12px;
+    font-family:inherit;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .2s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+  }
+  .flt-btn:hover{
+    border-color:var(--accent);
+    color:var(--text);
+    transform:translateY(-2px);
+    box-shadow:0 4px 12px rgba(79,142,247,.2);
+  }
+  .flt-btn.active{
+    background:linear-gradient(135deg,rgba(79,142,247,.2),rgba(167,139,250,.2));
+    border-color:var(--accent);
+    color:var(--accent);
+    box-shadow:0 0 20px rgba(79,142,247,.3);
+  }
+  .flt-clear-btn{
+    background:rgba(224,85,85,.1);
+    border:1px solid rgba(224,85,85,.3);
+    color:var(--red);
+    border-radius:8px;
+    padding:10px 20px;
+    font-family:inherit;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .2s;
+    align-self:center;
+  }
+  .flt-clear-btn:hover{
+    background:rgba(224,85,85,.2);
+    border-color:var(--red);
+  }
+  .img-filter-indicator{
+    position:absolute;top:10px;left:10px;
+    display:flex;flex-wrap:wrap;gap:4px;z-index:4;max-width:90%;
+  }
+  .img-filter-indicator .fi-badge{
+    background:rgba(0,0,0,.65);backdrop-filter:blur(4px);
+    border:1px solid rgba(167,139,250,.5);color:#a78bfa;
+    border-radius:4px;padding:2px 7px;font-size:10px;pointer-events:none;
+  }
+  #pixel-canvas{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;z-index:1;pointer-events:none;
+    -webkit-user-drag:none;display:none;
+  }
+
+  .hints-section{
+    margin-top:16px;padding:16px;
+    background:var(--card);border:1px solid var(--border);border-radius:10px;
+  }
+  .hangman-display{
+    text-align:center;
+    font-size:28px;
+    font-weight:700;
+    letter-spacing:.5em;
+    margin-bottom:16px;
+    font-family:'Rajdhani',monospace;
+    min-height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    line-height:1;
+  }
+  .hm-char{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:28px;
+    height:36px;
+    color:var(--accent);
+    font-weight:700;
+    transition:all .3s;
+    animation:charReveal .4s ease;
+  }
+  .hm-hidden{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:28px;
+    height:36px;
+    color:rgba(122,130,160,.35);
+    font-size:20px;
+    font-weight:400;
+  }
+  .hm-space{
+    width:14px;
+    height:36px;
+  }
+  @keyframes charReveal{
+    0%{opacity:0;transform:translateY(-8px) scale(.7)}
+    60%{transform:translateY(2px) scale(1.05)}
+    100%{opacity:1;transform:translateY(0) scale(1)}
+  }
+  
+  .hint-info{
+    display:flex;flex-direction:column;gap:6px;margin-bottom:12px;
+    font-size:13px;
+  }
+  .hint-info-item{
+    display:flex;align-items:center;gap:8px;
+  }
+  .hint-info-label{color:var(--muted);min-width:60px}
+  .hint-info-value{color:var(--gold);font-weight:600}
+  .hint-info-value.hidden{color:var(--muted);font-style:italic;font-weight:400}
+  .hint-buttons{
+    display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+  }
+  .hint-btn{
+    background:rgba(240,192,64,.1);border:1px solid rgba(240,192,64,.3);
+    color:var(--gold);border-radius:6px;padding:8px 14px;
+    font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;
+    transition:all .15s;
+  }
+  .hint-btn:hover{background:rgba(240,192,64,.2);border-color:var(--gold)}
+  .hint-btn:disabled{opacity:.4;cursor:not-allowed}
+  .hint-btn.used{background:rgba(122,130,160,.1);border-color:var(--border);color:var(--muted)}
+
+  .answer-zone{margin-top:18px}
+  .input-wrap{
+    position:relative;
+    display:flex;
+    align-items:stretch;
+    background:var(--card);
+    border:1.5px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .input-wrap:focus-within{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--glow);
+  }
+  .input-wrap.invalid{
+    border-color:var(--orange);
+    box-shadow:0 0 0 3px rgba(240,140,64,.3);
+    animation:shakeInput .4s ease;
+  }
+  @keyframes shakeInput{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-6px)}
+    75%{transform:translateX(6px)}
+  }
+  .input-wrap.disabled-wrap{opacity:.5;pointer-events:none}
+  .input-wrap input{
+    flex:1;
+    background:none;
+    border:none;
+    outline:none;
+    color:var(--text);
+    font-family:inherit;
+    font-size:17px;
+    padding:16px 20px;
+    min-width:0;
+  }
+  .input-wrap input::placeholder{color:var(--muted)}
+  .submit-btn{
+    background:linear-gradient(135deg,var(--accent),#6a9ff7);
+    border:none;
+    color:#fff;
+    font-family:inherit;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.05em;
+    padding:0 28px;
+    min-width:110px;
+    cursor:pointer;
+    transition:all .2s;
+    box-shadow:inset 0 0 0 0 rgba(255,255,255,.1);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .submit-btn:hover{
+    background:linear-gradient(135deg,#3a7de8,var(--accent));
+    box-shadow:inset 0 0 20px rgba(255,255,255,.15);
+  }
+  .submit-btn:active{
+    transform:scale(.98);
+  }
+  .submit-btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+  }
+  
+  #suggestions{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:0 0 8px 8px;margin-top:-2px;
+    max-height:350px;overflow-y:auto;display:none;
+  }
+  .sug-item{padding:10px 16px;font-size:14px;cursor:pointer;transition:background .1s}
+  .sug-item:hover{background:rgba(79,142,247,.15);color:var(--accent)}
+  .sug-item em{color:var(--accent);font-style:normal}
+  .feedback{
+    text-align:center;padding:14px;border-radius:8px;
+    margin-top:12px;font-size:15px;font-weight:600;
+    opacity:0;transition:opacity .25s;
+  }
+  .feedback.show{opacity:1}
+  .feedback.wrong{background:rgba(224,85,85,.12);color:var(--red);border:1px solid rgba(224,85,85,.3)}
+  .feedback.correct{background:rgba(62,207,142,.12);color:var(--green);border:1px solid rgba(62,207,142,.3)}
+  .feedback.invalid{background:rgba(240,140,64,.12);color:var(--orange);border:1px solid rgba(240,140,64,.3)}
+  .wrong-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:20px}
+  .wrong-tag{
+    background:rgba(224,85,85,.1);border:1px solid rgba(224,85,85,.25);
+    color:var(--red);border-radius:4px;padding:3px 8px;font-size:12px;
+    text-decoration:line-through;
+  }
+
+  .reveal-banner{
+    display:none;
+    background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.3);
+    border-radius:10px;padding:14px 20px;margin-top:14px;
+    align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  }
+  .reveal-banner .hero-name{font-size:22px;font-weight:700;color:var(--accent)}
+  .reveal-banner .hero-meta{font-size:12px;color:var(--muted);margin-top:3px}
+  .next-btn{
+    background:var(--accent);border:none;border-radius:8px;
+    color:#fff;font-family:inherit;font-weight:700;font-size:14px;
+    padding:10px 22px;cursor:pointer;transition:background .15s,transform .1s;
+  }
+  .next-btn:hover{background:#3a7de8;transform:translateY(-1px)}
+
+  #result{display:none;flex-direction:column;align-items:center;gap:20px;padding-top:20px}
+  .result-circle{
+    width:120px;height:120px;border-radius:50%;
+    border:3px solid var(--gold);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:rgba(240,192,64,.06);box-shadow:0 0 40px rgba(240,192,64,.2);
+  }
+  .result-circle .big{font-size:40px;font-weight:700;color:var(--gold);font-family:inherit}
+  .result-circle .small{font-size:12px;color:var(--muted);font-family:inherit}
+  .result-title{font-family:inherit;font-size:28px;font-weight:700;letter-spacing:.05em}
+  .result-sub{color:var(--muted);font-size:14px;text-align:center;font-family:inherit}
+  .hero-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
+    gap:10px;width:100%;max-width:700px;
+  }
+  .hero-card{
+    background:var(--card);border-radius:8px;overflow:hidden;
+    border:1px solid var(--border);text-align:center;font-size:11px;position:relative;
+    font-family:inherit;transition:transform .2s;
+  }
+  .hero-card:hover{transform:translateY(-4px)}
+  .hero-card img{width:100%;aspect-ratio:1/1;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+  .hero-card .hname{padding:5px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:inherit}
+  .hero-card.correct-card{border-color:rgba(62,207,142,.4)}
+  .hero-card.wrong-card{border-color:rgba(224,85,85,.35);opacity:.7}
+  .hero-card .tick{
+    position:absolute;top:4px;right:4px;
+    width:18px;height:18px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:10px;
+  }
+  .hero-card.correct-card .tick{background:var(--green);color:#fff}
+  .hero-card.wrong-card .tick{background:var(--red);color:#fff}
+  .replay-btn{
+    background:linear-gradient(135deg,#4f8ef7,#7c3aed);border:none;border-radius:10px;
+    color:#fff;font-family:inherit;font-size:16px;font-weight:700;padding:14px 40px;
+    cursor:pointer;box-shadow:0 4px 20px rgba(79,142,247,.35);transition:opacity .15s;
+  }
+  .replay-btn:hover{opacity:.85}
+
+  .toast-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+    z-index:10000;display:none;align-items:center;justify-content:center;
+    animation:fadeIn .2s;
+  }
+  .toast-overlay.show{display:flex}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .toast-box{
+    background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:24px 32px;max-width:400px;text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,.6);
+    animation:slideUp .3s cubic-bezier(.25,.46,.45,.94);
+  }
+  @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .toast-title{font-size:18px;font-weight:700;margin-bottom:8px;color:var(--text)}
+  .toast-msg{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+  .toast-actions{display:flex;gap:10px;justify-content:center}
+  .toast-btn{
+    border:none;border-radius:8px;padding:10px 24px;
+    font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;
+    transition:all .15s;
+  }
+  .toast-btn.primary{background:var(--accent);color:#fff}
+  .toast-btn.primary:hover{background:#3a7de8}
+  .toast-btn.danger{background:var(--red);color:#fff}
+  .toast-btn.danger:hover{background:#c84444}
+  .toast-btn.secondary{background:var(--surface);border:1px solid var(--border);color:var(--muted)}
+  .toast-btn.secondary:hover{border-color:var(--accent);color:var(--text)}
+
+  @keyframes correctPulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.05)}
+  }
+  @keyframes wrongShake{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-10px)}
+    75%{transform:translateX(10px)}
+  }
+  @keyframes confetti{
+    0%{transform:translateY(0) rotate(0deg);opacity:1}
+    100%{transform:translateY(100vh) rotate(720deg);opacity:0}
+  }
+  .img-wrapper.correct{animation:correctPulse .5s ease}
+  .img-wrapper.wrong{animation:wrongShake .5s ease}
+  .confetti-piece{
+    position:fixed;
+    width:10px;
+    height:10px;
+    background:var(--gold);
+    animation:confetti 3s ease-in forwards;
+    z-index:99998;
+    pointer-events:none;
+  }
+
+  ::-webkit-scrollbar{width:4px}
+  ::-webkit-scrollbar-track{background:var(--surface)}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+  @media(max-width:480px){
+    .img-wrapper{max-width:100%}
+    .hero-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr))}
+    .flt-row{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
+    .hangman-display{font-size:24px;letter-spacing:.35em}
+    .hm-char,.hm-hidden{width:22px;height:30px}
+    .hm-space{width:10px;height:30px}
+    .submit-btn{padding:0 20px;min-width:90px;font-size:14px}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="logo">ROV HERO QUIZ</div>
+    <div class="sub">ทายชื่อตัวละครจากรูปภาพที่ซูมเข้า</div>
+  </header>
+
+  <div id="loading">
+    <div class="spinner"></div>
+    <div style="color:var(--muted);font-size:14px">กำลังโหลดข้อมูล...</div>
+  </div>
+
+  <section id="setup">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px;"><button id="setup-settings-btn" class="settings-btn">⚙</button></div>
+    <div>
+      <div class="section-label">จำนวนตัวละคร</div>
+      <div class="count-grid">
+        <button class="count-btn" data-n="10">10</button>
+        <button class="count-btn active" data-n="20">20</button>
+        <button class="count-btn" data-n="30">30</button>
+        <button class="count-btn" data-n="50">50</button>
+        <button class="count-btn" data-n="all">ทั้งหมด</button>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">กรองตัวละคร</div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="tab-row" id="filter-type-row">
+          <button class="filter-type-btn active" data-ft="all">สุ่มทั้งหมด</button>
+          <button class="filter-type-btn" data-ft="role">เฉพาะตำแหน่ง</button>
+          <button class="filter-type-btn" data-ft="lane">เฉพาะเลน</button>
+        </div>
+        <div>
+          <div class="filter-values-header" id="filter-values-header" style="display:none">
+            <span>เลือกได้หลายรายการ:</span>
+            <span class="filter-count-badge" id="filter-count-badge">0 เลือก</span>
+            <button class="filter-clear-btn" id="filter-clear-btn">ล้างทั้งหมด</button>
+          </div>
+          <div class="tab-row" id="filter-values"></div>
+        </div>
+      </div>
+    </div>
+    <button class="start-btn" id="start-btn">เริ่มเกม</button>
+  </section>
+
+  <section id="game">
+    <div class="game-topbar">
+      <div class="score-pill">คะแนน <span id="score-display">0</span></div>
+      <div class="progress-pill" id="prog-text">0 / 0</div>
+      <div class="top-right-btns">
+        <button id="settings-btn" class="settings-btn">⚙</button>
+        <button id="end-game-btn" class="end-game-btn">จบเกม</button>
+        <button id="reveal-hint-btn">เฉลย</button>
+        <button class="skip-btn" id="skip-btn">ข้าม</button>
+      </div>
+    </div>
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-fill" style="width:0%"></div></div>
+
+    <div class="attempt-dots" id="attempt-dots"></div>
+
+    <div class="img-wrapper" id="img-wrapper">
+      <img id="hero-img" src="" alt="hero">
+      <canvas id="pixel-canvas"></canvas>
+      <div class="img-overlay"></div>
+      <div class="img-filter-indicator" id="img-filter-indicator"></div>
+      <div class="hint-badge" id="hint-badge">0 / 10 ครั้ง</div>
+    </div>
+
+    <div class="hints-section" id="hints-section">
+      <div class="hangman-display" id="hangman-display"></div>
+      <div class="hint-info">
+        <div class="hint-info-item">
+          <span class="hint-info-label">ตำแหน่ง:</span>
+          <span class="hint-info-value hidden" id="hint-role">กดเพื่อดู</span>
+        </div>
+        <div class="hint-info-item">
+          <span class="hint-info-label">เลน:</span>
+          <span class="hint-info-value hidden" id="hint-lane">กดเพื่อดู</span>
+        </div>
+      </div>
+      <div class="hint-buttons">
+        <button class="hint-btn" id="hint-btn-role">ดูตำแหน่ง</button>
+        <button class="hint-btn" id="hint-btn-lane">ดูเลน</button>
+        <button class="hint-btn" id="hint-btn-letter">สุ่มตัวอักษร</button>
+      </div>
+    </div>
+
+    <div class="answer-zone">
+      <div class="input-wrap" id="input-wrap">
+        <input type="text" id="guess-input" placeholder="พิมพ์ชื่อตัวละคร..." autocomplete="off" spellcheck="false">
+        <button class="submit-btn" id="submit-btn">ยืนยัน</button>
+      </div>
+      <div id="suggestions"></div>
+      <div class="wrong-list" id="wrong-list"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+    <div class="reveal-banner" id="reveal-banner">
+      <div>
+        <div class="hero-name" id="reveal-name"></div>
+        <div class="hero-meta" id="reveal-meta"></div>
+      </div>
+      <button class="next-btn" id="next-btn">ถัดไป</button>
+    </div>
+  </section>
+
+  <section id="result">
+    <div class="result-circle">
+      <div class="big" id="res-score">0</div>
+      <div class="small">คะแนน</div>
+    </div>
+    <div class="result-title" id="res-title">จบแล้ว!</div>
+    <div class="result-sub" id="res-sub"></div>
+    <div class="hero-grid" id="result-grid"></div>
+    <button class="replay-btn" id="replay-btn">เล่นใหม่</button>
+  </section>
+
+  <div class="img-filter-panel" id="img-filter-panel">
+    <div class="img-filter-header">
+      <div class="img-filter-title">ฟิลเตอร์รูป</div>
+      <button class="img-filter-close" id="img-filter-close">✕</button>
+    </div>
+    <div class="img-filter-body">
+      <div class="img-filter-active-badges" id="filter-active-badges">
+        <span class="no-filter-text">ยังไม่ได้เลือกฟิลเตอร์</span>
+      </div>
+      <div class="flt-row">
+        <button class="flt-btn" data-filter="grayscale">ขาวดำ</button>
+        <button class="flt-btn" data-filter="invert">กลับสี</button>
+        <button class="flt-btn" data-filter="flip-h">กลับซ้าย-ขวา</button>
+        <button class="flt-btn" data-filter="flip-v">กลับบน-ล่าง</button>
+        <button class="flt-btn" data-filter="blur">เบลอ</button>
+        <button class="flt-btn" data-filter="pixel">Pixel</button>
+        <button class="flt-btn" data-filter="sepia">Sepia</button>
+        <button class="flt-btn" data-filter="hue">หมุนสี</button>
+      </div>
+      <button class="flt-clear-btn" id="flt-clear-btn">ล้างทั้งหมด</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-overlay" id="toast-overlay">
+  <div class="toast-box">
+    <div class="toast-title" id="toast-title"></div>
+    <div class="toast-msg" id="toast-msg"></div>
+    <div class="toast-actions" id="toast-actions"></div>
+  </div>
+</div>
+
+<script>
+// ---- ANTI-DEVTOOLS ----
+(function(){
+  document.addEventListener('keydown',function(e){
+    if(e.key==='F12'){e.preventDefault();return false;}
+    if(e.ctrlKey&&e.shiftKey&&['I','J','C','K'].includes(e.key.toUpperCase())){e.preventDefault();return false;}
+    if(e.ctrlKey&&e.key.toUpperCase()==='U'){e.preventDefault();return false;}
+  });
+  document.addEventListener('contextmenu',e=>e.preventDefault());
+  let devOpen=false;
+  setInterval(()=>{
+    const t=160;
+    if(window.outerWidth-window.innerWidth>t||window.outerHeight-window.innerHeight>t){
+      if(!devOpen){
+        devOpen=true;
+        document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0c12;color:#7a82a0;font-family:sans-serif;font-size:18px;text-align:center;padding:20px">กรุณาปิด DevTools แล้วรีเฟรชหน้าใหม่</div>';
+      }
+    }
+  },600);
+})();
+
+// ---- CONSTANTS ----
+const MAX_ATTEMPTS = 10;
+const REVEAL_BTN_AFTER = 5;
+const ZOOM_START = 10;
+const ZOOM_END = 1;
+const BLUR_MIN = 0;
+const BLUR_MAX = 3.5;
+const PIXEL_SIZE_MIN = 1;
+const PIXEL_SIZE_MAX = 8;
+
+// ---- STATE ----
+let allHeroes = [];
+let filterType = 'all';
+let filterValues = [];
+let countSel = 20;
+let queue = [];
+let current = null;
+let currentIdx = 0;
+let score = 0;
+let wrongGuesses = [];
+let revealed = false;
+let sessionResults = [];
+let revealedLetters = new Set();
+let hintPenalty = 0;
+let audioCtx = null;
+let lastInputValue = '';
+
+// ---- AUDIO SYSTEM ----
+function initAudio(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+function playNote(freq, startTime, duration, volume=0.08, type='sine'){
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  
+  gain.gain.setValueAtTime(0, startTime);
+  gain.gain.linearRampToValueAtTime(volume, startTime + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+  
+  osc.start(startTime);
+  osc.stop(startTime + duration);
+}
+
+function playSound(type){
+  try{
+    if(!audioCtx) initAudio();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    const now = audioCtx.currentTime;
+    
+    switch(type){
+      case 'correct': {
+        const notes = [
+          {f:523.25, t:0},
+          {f:659.25, t:0.08},
+          {f:783.99, t:0.16},
+          {f:1046.5, t:0.24}
+        ];
+        notes.forEach(n => {
+          playNote(n.f, now + n.t, 0.35, 0.07, 'sine');
+        });
+        break;
+      }
+      case 'wrong': {
+        playNote(349.23, now, 0.18, 0.06, 'triangle');
+        playNote(261.63, now + 0.1, 0.22, 0.06, 'triangle');
+        break;
+      }
+      case 'click': {
+        playNote(1400, now, 0.04, 0.03, 'sine');
+        break;
+      }
+      case 'start': {
+        const notes = [
+          {f:392, t:0},
+          {f:523.25, t:0.1},
+          {f:659.25, t:0.2},
+          {f:783.99, t:0.3}
+        ];
+        notes.forEach(n => {
+          playNote(n.f, now + n.t, 0.3, 0.06, 'sine');
+        });
+        break;
+      }
+      case 'hint': {
+        playNote(880, now, 0.12, 0.05, 'sine');
+        playNote(1174.66, now + 0.08, 0.15, 0.05, 'sine');
+        break;
+      }
+      case 'reveal': {
+        const notes = [
+          {f:523.25, t:0},
+          {f:659.25, t:0.05},
+          {f:783.99, t:0.1},
+          {f:1046.5, t:0.15},
+          {f:1318.51, t:0.2}
+        ];
+        notes.forEach(n => {
+          playNote(n.f, now + n.t, 0.4, 0.05, 'sine');
+        });
+        break;
+      }
+      case 'type': {
+        const freq = 1200 + Math.random() * 400;
+        playNote(freq, now, 0.03, 0.025, 'sine');
+        break;
+      }
+      case 'delete': {
+        const freq = 600 + Math.random() * 200;
+        playNote(freq, now, 0.05, 0.02, 'sine');
+        break;
+      }
+      case 'select': {
+        playNote(1000, now, 0.05, 0.04, 'sine');
+        playNote(1500, now + 0.03, 0.05, 0.04, 'sine');
+        break;
+      }
+      case 'invalid': {
+        // [เพิ่ม] เสียงเตือนเมื่อพิมพ์ชื่อที่ไม่ใช่ตัวละคร
+        playNote(500, now, 0.1, 0.05, 'square');
+        playNote(400, now + 0.1, 0.15, 0.05, 'square');
+        break;
+      }
+    }
+  }catch(e){
+    console.warn('Audio error:', e);
+  }
+}
+
+// ---- ANIMATIONS ----
+function animateImage(type){
+  const wrapper = document.getElementById('img-wrapper');
+  wrapper.classList.remove('correct','wrong');
+  void wrapper.offsetWidth;
+  wrapper.classList.add(type);
+  setTimeout(()=>wrapper.classList.remove(type),500);
+}
+
+function createConfetti(){
+  const colors = ['#f0c040','#4f8ef7','#3ecf8e','#e05555','#a78bfa'];
+  for(let i=0;i<50;i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random()*100+'vw';
+    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+    piece.style.animationDelay = Math.random()*2+'s';
+    piece.style.animationDuration = (2+Math.random()*2)+'s';
+    document.body.appendChild(piece);
+    setTimeout(()=>piece.remove(),5000);
+  }
+}
+
+// [เพิ่ม] Animation สำหรับ input ที่ invalid
+function shakeInput(){
+  const wrap = document.getElementById('input-wrap');
+  wrap.classList.remove('invalid');
+  void wrap.offsetWidth;
+  wrap.classList.add('invalid');
+  setTimeout(()=>wrap.classList.remove('invalid'),500);
+}
+
+// ---- TOAST SYSTEM ----
+function showToast(title, msg, actions){
+  const overlay = document.getElementById('toast-overlay');
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-msg').textContent = msg;
+  const actionsDiv = document.getElementById('toast-actions');
+  actionsDiv.innerHTML = '';
+  actions.forEach(act=>{
+    const btn = document.createElement('button');
+    btn.className = `toast-btn ${act.type||'secondary'}`;
+    btn.textContent = act.label;
+    btn.onclick = ()=>{
+      overlay.classList.remove('show');
+      if(act.onClick) act.onClick();
+      playSound('click');
+    };
+    actionsDiv.appendChild(btn);
+  });
+  overlay.classList.add('show');
+}
+
+// ---- LOAD DATA.JSON ----
+async function loadData(){
+  try{
+    const r = await fetch('data.json');
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    allHeroes = await r.json();
+    initSetup();
+  } catch(err){
+    document.getElementById('loading').innerHTML=
+      `<div class="load-err">โหลด data.json ไม่สำเร็จ<br><small>${err.message}</small><br><br><small>ตรวจสอบว่าไฟล์ data.json อยู่ในโฟลเดอร์เดียวกับ index.html</small></div>`;
+  }
+}
+loadData();
+
+function initSetup(){
+  document.getElementById('loading').style.display='none';
+  document.getElementById('setup').style.display='flex';
+  renderFilterValues();
+}
+
+// ---- SETUP UI ----
+document.querySelectorAll('.count-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.count-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  countSel = b.dataset.n==='all'?9999:parseInt(b.dataset.n);
+  playSound('click');
+}));
+
+document.querySelectorAll('.filter-type-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.filter-type-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  filterType = b.dataset.ft;
+  filterValues = [];
+  renderFilterValues();
+  playSound('click');
+}));
+
+function renderFilterValues(){
+  const div=document.getElementById('filter-values');
+  const header=document.getElementById('filter-values-header');
+  div.innerHTML='';
+  
+  if(filterType==='all'){
+    header.style.display='none';
+    return;
+  }
+  
+  header.style.display='flex';
+  updateFilterCountBadge();
+  
+  const vals=filterType==='role'
+    ?[...new Set(allHeroes.flatMap(h=>h.roles))].sort()
+    :[...new Set(allHeroes.flatMap(h=>h.lane))].sort();
+    
+  vals.forEach(v=>{
+    const btn=document.createElement('button');
+    btn.className='filter-val-btn'+(filterValues.includes(v)?' active':'');
+    btn.textContent=v;
+    btn.addEventListener('click',()=>{
+      if(filterValues.includes(v)){
+        filterValues = filterValues.filter(x=>x!==v);
+        btn.classList.remove('active');
+      } else {
+        filterValues.push(v);
+        btn.classList.add('active');
+      }
+      updateFilterCountBadge();
+      playSound('click');
+    });
+    div.appendChild(btn);
+  });
+}
+
+function updateFilterCountBadge(){
+  const badge = document.getElementById('filter-count-badge');
+  const clearBtn = document.getElementById('filter-clear-btn');
+  const count = filterValues.length;
+  badge.textContent = count === 0 ? '0 เลือก' : `${count} เลือก`;
+  clearBtn.disabled = count === 0;
+}
+
+document.getElementById('filter-clear-btn').addEventListener('click',()=>{
+  filterValues = [];
+  document.querySelectorAll('.filter-val-btn').forEach(b=>b.classList.remove('active'));
+  updateFilterCountBadge();
+  playSound('click');
+});
+
+document.getElementById('start-btn').addEventListener('click',startGame);
+
+// ---- START GAME ----
+function startGame(){
+  let pool=allHeroes.slice();
+  
+  if(filterType==='role' && filterValues.length > 0){
+    pool = pool.filter(h => h.roles.some(r => filterValues.includes(r)));
+  }
+  if(filterType==='lane' && filterValues.length > 0){
+    pool = pool.filter(h => h.lane.some(l => filterValues.includes(l)));
+  }
+  
+  if(!pool.length){
+    showToast(
+      'ไม่พบตัวละคร',
+      'ไม่มีตัวละครในหมวดที่เลือก กรุณาเลือกใหม่',
+      [{label:'ตกลง', type:'primary'}]
+    );
+    return;
+  }
+  
+  pool=pool.sort(()=>Math.random()-.5);
+  const n=Math.min(countSel,pool.length);
+  queue=pool.slice(0,n);
+  currentIdx=0;score=0;sessionResults=[];
+  document.getElementById('setup').style.display='none';
+  document.getElementById('result').style.display='none';
+  document.getElementById('game').style.display='flex';
+  playSound('start');
+  loadQuestion();
+}
+
+// ---- LOAD QUESTION ----
+function loadQuestion(){
+  if(currentIdx>=queue.length){endGame();return;}
+  current=queue[currentIdx];
+  wrongGuesses=[];
+  revealed=false;
+  revealedLetters.clear();
+  hintPenalty = 0;
+  lastInputValue = '';
+
+  const img = document.getElementById('hero-img');
+  if(img){
+    img._ix = null;
+    img._iy = null;
+  }
+
+  const total=queue.length;
+  document.getElementById('prog-text').textContent=`${currentIdx+1} / ${total}`;
+  document.getElementById('prog-fill').style.width=`${(currentIdx/total)*100}%`;
+  document.getElementById('score-display').textContent=score;
+  document.getElementById('wrong-list').innerHTML='';
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('feedback').textContent='';
+  document.getElementById('guess-input').value='';
+  document.getElementById('suggestions').style.display='none';
+  document.getElementById('guess-input').disabled=false;
+  document.getElementById('submit-btn').disabled=false;
+  document.getElementById('input-wrap').classList.remove('disabled-wrap');
+  document.getElementById('reveal-banner').style.display='none';
+  document.getElementById('reveal-hint-btn').style.display='none';
+  document.getElementById('hint-badge').textContent=`0 / ${MAX_ATTEMPTS} ครั้ง`;
+
+  document.getElementById('hint-role').textContent='กดเพื่อดู';
+  document.getElementById('hint-role').classList.add('hidden');
+  document.getElementById('hint-lane').textContent='กดเพื่อดู';
+  document.getElementById('hint-lane').classList.add('hidden');
+  
+  document.getElementById('hint-btn-role').disabled=false;
+  document.getElementById('hint-btn-role').classList.remove('used');
+  document.getElementById('hint-btn-role').textContent='ดูตำแหน่ง';
+  
+  document.getElementById('hint-btn-lane').disabled=false;
+  document.getElementById('hint-btn-lane').classList.remove('used');
+  document.getElementById('hint-btn-lane').textContent='ดูเลน';
+  
+  document.getElementById('hint-btn-letter').disabled=false;
+  document.getElementById('hint-btn-letter').classList.remove('used');
+  document.getElementById('hint-btn-letter').textContent='สุ่มตัวอักษร';
+  
+  updateHangmanDisplay();
+  renderDots(0, false);
+
+  loadImageAsBlob(current.skins[0].image, blob=>{
+    const img=document.getElementById('hero-img');
+    if(img._blobUrl) URL.revokeObjectURL(img._blobUrl);
+    img._blobUrl=blob;
+    img._flipX = (typeof activeFilters!=='undefined'&&activeFilters.has('flip-h'))?-1:1;
+    img._flipY = (typeof activeFilters!=='undefined'&&activeFilters.has('flip-v'))?-1:1;
+    img.onload = ()=>{
+      if(typeof applyImageFilters==='function') applyImageFilters();
+    };
+    img.src=blob;
+  });
+
+  setZoom(ZOOM_START, true);
+  document.getElementById('guess-input').focus();
+}
+
+function renderDots(usedCount, isCorrect){
+  const wrap=document.getElementById('attempt-dots');
+  wrap.innerHTML='';
+  for(let i=0;i<MAX_ATTEMPTS;i++){
+    const d=document.createElement('div');
+    d.className='dot';
+    if(isCorrect && i===usedCount-1) d.classList.add('correct');
+    else if(i<usedCount) d.classList.add('used');
+    wrap.appendChild(d);
+  }
+  const lbl=document.createElement('span');
+  lbl.className='dot-label';
+  lbl.textContent=`${usedCount}/${MAX_ATTEMPTS}`;
+  wrap.appendChild(lbl);
+}
+
+function setZoom(scale, instant){
+  const img=document.getElementById('hero-img');
+  if(instant){ 
+    img._ix = (Math.random()-.5)*100;
+    img._iy = (Math.random()-.5)*100;
+  }
+  const ix=(img._ix!=null?img._ix:(img._ix=(Math.random()-.5)*100));
+  const iy=(img._iy!=null?img._iy:(img._iy=(Math.random()-.5)*100));
+  const factor=scale>1?(scale-1)/(ZOOM_START-1):0;
+  const fx=(img._flipX||1);
+  const fy=(img._flipY||1);
+  if(instant){
+    img.style.transition='none';
+    setTimeout(()=>{ img.style.transition='transform 1s cubic-bezier(.25,.46,.45,.94)'; },30);
+  }
+  img.style.transform=`scale(${scale*fx}, ${scale*fy}) translate(${ix*factor}%,${iy*factor}%)`;
+}
+
+function updateZoom(){
+  const steps=wrongGuesses.length;
+  const scale=Math.max(ZOOM_END, ZOOM_START - (ZOOM_START-ZOOM_END)*(steps/MAX_ATTEMPTS));
+  setZoom(scale, false);
+  document.getElementById('hint-badge').textContent=`${steps} / ${MAX_ATTEMPTS} ครั้ง`;
+  if(activeFilters && activeFilters.size > 0) applyImageFilters();
+}
+
+function loadImageAsBlob(src, cb){
+  const req=new XMLHttpRequest();
+  req.open('GET',src,true);
+  req.responseType='blob';
+  req.onload=function(){
+    cb(this.status===200?URL.createObjectURL(this.response):src);
+  };
+  req.onerror=()=>cb(src);
+  req.send();
+}
+
+// ---- GUESS ----
+function norm(s){return s.trim().toLowerCase().replace(/['\s\-]/g,'');}
+
+document.getElementById('submit-btn').addEventListener('click',submitGuess);
+document.getElementById('guess-input').addEventListener('keydown',e=>{if(e.key==='Enter')submitGuess();});
+
+document.getElementById('guess-input').addEventListener('input',function(){
+  const currentValue = this.value;
+  if(currentValue.length !== lastInputValue.length){
+    if(currentValue.length > lastInputValue.length){
+      playSound('type');
+    } else if(currentValue.length < lastInputValue.length){
+      playSound('delete');
+    }
+    lastInputValue = currentValue;
+  }
+  
+  const v=currentValue.trim().toLowerCase();
+  const box=document.getElementById('suggestions');
+  if(v.length<1){box.style.display='none';return;}
+  const used=new Set(wrongGuesses.map(norm));
+  const matches=allHeroes
+    .filter(h=>norm(h.name).includes(norm(v))&&!used.has(norm(h.name)));
+  if(!matches.length){box.style.display='none';return;}
+  box.innerHTML=matches.map(h=>{
+    const lo=h.name.toLowerCase();
+    const i=lo.indexOf(v);
+    const hi=i>=0
+      ?h.name.slice(0,i)+'<em>'+h.name.slice(i,i+v.length)+'</em>'+h.name.slice(i+v.length)
+      :h.name;
+    return `<div class="sug-item" data-name="${h.name}">${hi}</div>`;
+  }).join('');
+  box.style.display='block';
+  box.querySelectorAll('.sug-item').forEach(el=>{
+    el.addEventListener('mousedown',e=>{
+      e.preventDefault();
+      document.getElementById('guess-input').value=el.dataset.name;
+      box.style.display='none';
+      document.getElementById('guess-input').focus();
+      playSound('select');
+    });
+  });
+});
+
+document.getElementById('guess-input').addEventListener('blur',()=>{
+  setTimeout(()=>{ document.getElementById('suggestions').style.display='none'; },150);
+});
+
+// [แก้] submitGuess - ตรวจสอบว่าชื่อที่พิมพ์เป็นตัวละครจริงหรือไม่
+function submitGuess(){
+  if(revealed) return;
+  const input=document.getElementById('guess-input');
+  const val=input.value.trim();
+  if(!val) return;
+  input.value='';
+  lastInputValue = '';
+  document.getElementById('suggestions').style.display='none';
+
+  // [เพิ่ม] ตรวจสอบว่าชื่อที่พิมพ์เป็นตัวละครในระบบหรือไม่
+  const normalizedVal = norm(val);
+  const matchedHero = allHeroes.find(h => norm(h.name) === normalizedVal);
+  
+  if(!matchedHero){
+    // ชื่อไม่ใช่ตัวละครในระบบ → ไม่ส่งคำตอบ, ไม่หักคะแนน
+    showFeedback('invalid',`"${val}" ไม่ใช่ชื่อตัวละครในระบบ`);
+    shakeInput();
+    playSound('invalid');
+    // คืนค่ากลับให้ผู้ใช้เห็นและแก้
+    input.value = val;
+    input.focus();
+    input.select();
+    return;
+  }
+  
+  // [เพิ่ม] ตรวจสอบว่าเคยพิมพ์ผิดไปแล้วหรือยัง
+  if(wrongGuesses.map(norm).includes(normalizedVal)){
+    showFeedback('invalid',`"${val}" เคยพิมพ์ไปแล้ว`);
+    shakeInput();
+    playSound('invalid');
+    input.focus();
+    return;
+  }
+
+  // ตรวจสอบคำตอบ
+  if(normalizedVal === norm(current.name)){
+    const pts=Math.max(1, MAX_ATTEMPTS + 1 - wrongGuesses.length - hintPenalty);
+    score+=pts;
+    document.getElementById('score-display').textContent=score;
+    showFeedback('correct',`ถูกต้อง! +${pts} คะแนน`);
+    renderDots(wrongGuesses.length+1, true);
+    animateImage('correct');
+    playSound('correct');
+    revealAnswer(true);
+    sessionResults.push({hero:current,correct:true,wrongCount:wrongGuesses.length});
+  } else {
+    wrongGuesses.push(val);
+    addWrongTag(val);
+    showFeedback('wrong',`"${val}" ไม่ใช่คำตอบที่ถูกต้อง`);
+    renderDots(wrongGuesses.length, false);
+    animateImage('wrong');
+    playSound('wrong');
+    updateZoom();
+
+    if(wrongGuesses.length>=REVEAL_BTN_AFTER){
+      document.getElementById('reveal-hint-btn').style.display='inline-flex';
+    }
+
+    if(wrongGuesses.length>=MAX_ATTEMPTS){
+      sessionResults.push({hero:current,correct:false,wrongCount:wrongGuesses.length});
+      revealAnswer(false);
+    }
+  }
+}
+
+function addWrongTag(name){
+  const tag=document.createElement('div');
+  tag.className='wrong-tag';
+  tag.textContent=name;
+  document.getElementById('wrong-list').appendChild(tag);
+}
+
+function showFeedback(type,msg){
+  const el=document.getElementById('feedback');
+  el.className=`feedback ${type} show`;
+  el.textContent=msg;
+  clearTimeout(el._t);
+  if(type==='wrong' || type==='invalid') el._t=setTimeout(()=>el.classList.remove('show'),2000);
+}
+
+function revealAnswer(correct){
+  revealed=true;
+  const img=document.getElementById('hero-img');
+  img.style.transition='transform 1s cubic-bezier(.25,.46,.45,.94)';
+  const fx_r=(img._flipX||1); const fy_r=(img._flipY||1);
+  img.style.transform=`scale(${fx_r}, ${fy_r}) translate(0%,0%)`;
+
+  document.getElementById('guess-input').disabled=true;
+  document.getElementById('submit-btn').disabled=true;
+  document.getElementById('input-wrap').classList.add('disabled-wrap');
+  document.getElementById('reveal-hint-btn').style.display='none';
+
+  document.getElementById('hint-btn-role').disabled=true;
+  document.getElementById('hint-btn-lane').disabled=true;
+  document.getElementById('hint-btn-letter').disabled=true;
+
+  updateHangmanDisplay(true);
+  playSound('reveal');
+
+  const banner=document.getElementById('reveal-banner');
+  banner.style.display='flex';
+  document.getElementById('reveal-name').textContent=current.name;
+  document.getElementById('reveal-meta').textContent=
+    `${current.roles.join(' / ')}  |  ${current.lane.join(' / ')}`;
+}
+
+document.getElementById('reveal-hint-btn').addEventListener('click',()=>{
+  if(!revealed){
+    sessionResults.push({hero:current,correct:false,wrongCount:wrongGuesses.length});
+    revealAnswer(false);
+  }
+});
+
+document.getElementById('next-btn').addEventListener('click',()=>{
+  currentIdx++;
+  const img=document.getElementById('hero-img');
+  img._ix=null;img._iy=null;
+  playSound('click');
+  loadQuestion();
+});
+
+document.getElementById('skip-btn').addEventListener('click',()=>{
+  if(revealed) return;
+  showToast(
+    'ข้ามตัวละครนี้?',
+    'คุณต้องการข้ามตัวละครนี้จริงๆ หรือ? จะไม่ได้รับคะแนน',
+    [
+      {label:'ยกเลิก', type:'secondary'},
+      {label:'ข้าม', type:'danger', onClick:()=>{
+        sessionResults.push({hero:current,correct:false,wrongCount:wrongGuesses.length});
+        revealAnswer(false);
+      }}
+    ]
+  );
+});
+
+document.getElementById('end-game-btn').addEventListener('click',()=>{
+  showToast(
+    'จบเกมกลางคัน?',
+    `คุณต้องการจบเกมตอนนี้จริงๆ หรือ? (ตอบไปแล้ว ${currentIdx} / ${queue.length})`,
+    [
+      {label:'ยกเลิก', type:'secondary'},
+      {label:'จบเกม', type:'danger', onClick:()=>{
+        queue = queue.slice(0, currentIdx);
+        endGame();
+      }}
+    ]
+  );
+});
+
+// ---- HINTS SYSTEM ----
+document.getElementById('hint-btn-role').addEventListener('click',()=>{
+  if(revealed) return;
+  const el = document.getElementById('hint-role');
+  el.textContent = current.roles.join(' / ');
+  el.classList.remove('hidden');
+  document.getElementById('hint-btn-role').disabled=true;
+  document.getElementById('hint-btn-role').classList.add('used');
+  document.getElementById('hint-btn-role').textContent='✓ ดูแล้ว';
+  hintPenalty += 1;
+  playSound('hint');
+});
+
+document.getElementById('hint-btn-lane').addEventListener('click',()=>{
+  if(revealed) return;
+  const el = document.getElementById('hint-lane');
+  el.textContent = current.lane.join(' / ');
+  el.classList.remove('hidden');
+  document.getElementById('hint-btn-lane').disabled=true;
+  document.getElementById('hint-btn-lane').classList.add('used');
+  document.getElementById('hint-btn-lane').textContent='✓ ดูแล้ว';
+  hintPenalty += 1;
+  playSound('hint');
+});
+
+document.getElementById('hint-btn-letter').addEventListener('click',()=>{
+  if(revealed) return;
+  const name = current.name;
+  const unrevealed = [];
+  for(let i=0;i<name.length;i++){
+    if(!revealedLetters.has(i) && name[i]!==' '){
+      unrevealed.push(i);
+    }
+  }
+  if(unrevealed.length===0){
+    document.getElementById('hint-btn-letter').disabled=true;
+    document.getElementById('hint-btn-letter').classList.add('used');
+    document.getElementById('hint-btn-letter').textContent='✓ ครบแล้ว';
+    return;
+  }
+  const randIdx = unrevealed[Math.floor(Math.random()*unrevealed.length)];
+  revealedLetters.add(randIdx);
+  updateHangmanDisplay();
+  hintPenalty += 2;
+  playSound('hint');
+  
+  if(revealedLetters.size >= name.replace(/\s/g,'').length){
+    document.getElementById('hint-btn-letter').disabled=true;
+    document.getElementById('hint-btn-letter').classList.add('used');
+    document.getElementById('hint-btn-letter').textContent='✓ ครบแล้ว';
+  }
+});
+
+function updateHangmanDisplay(showAll=false){
+  const name = current.name;
+  const display = document.getElementById('hangman-display');
+  display.innerHTML = '';
+  
+  for(let i=0;i<name.length;i++){
+    if(name[i]===' '){
+      const space = document.createElement('span');
+      space.className = 'hm-space';
+      display.appendChild(space);
+    } else if(showAll || revealedLetters.has(i)){
+      const char = document.createElement('span');
+      char.className = 'hm-char';
+      char.textContent = name[i];
+      display.appendChild(char);
+    } else {
+      const hidden = document.createElement('span');
+      hidden.className = 'hm-hidden';
+      hidden.textContent = '·';
+      display.appendChild(hidden);
+    }
+  }
+}
+
+// ---- END GAME ----
+function endGame(){
+  document.getElementById('game').style.display='none';
+  const res=document.getElementById('result');
+  res.style.display='flex';
+  document.getElementById('res-score').textContent=score;
+  const correct=sessionResults.filter(r=>r.correct).length;
+  const total=sessionResults.length;
+  const pct=total?correct/total:0;
+  document.getElementById('res-title').textContent=
+    pct===1?'สมบูรณ์แบบ!':pct>=.7?'เก่งมาก!':pct>=.4?'พอใช้ได้!':'ฝึกฝนอีกนิด!';
+  document.getElementById('res-sub').textContent=`ตอบถูก ${correct} / ${total} ตัวละคร`;
+  
+  if(pct>=.7){
+    createConfetti();
+    playSound('correct');
+  }
+  
+  const grid=document.getElementById('result-grid');
+  grid.innerHTML='';
+  sessionResults.forEach(r=>{
+    const card=document.createElement('div');
+    card.className='hero-card '+(r.correct?'correct-card':'wrong-card');
+    const tick=document.createElement('div');
+    tick.className='tick';tick.textContent=r.correct?'V':'X';
+    card.appendChild(tick);
+    const img=document.createElement('img');
+    img.src=r.hero.skins[0].image;img.alt='';
+    card.appendChild(img);
+    const nm=document.createElement('div');
+    nm.className='hname';nm.textContent=r.hero.name;
+    card.appendChild(nm);
+    grid.appendChild(card);
+  });
+}
+
+// ---- SETTINGS BUTTON ----
+const filterPanel=document.getElementById('img-filter-panel');
+
+function toggleFilterPanel(e){
+  if(e) e.stopPropagation();
+  const isOpen = filterPanel.style.display === 'block';
+  filterPanel.style.display = isOpen ? 'none' : 'block';
+  playSound('click');
+}
+
+document.getElementById('img-filter-close').addEventListener('click',(e)=>{
+  e.stopPropagation();
+  filterPanel.style.display = 'none';
+  playSound('click');
+});
+
+const setupSettingsBtn = document.getElementById('setup-settings-btn');
+const gameSettingsBtn = document.getElementById('settings-btn');
+
+if(setupSettingsBtn){
+  setupSettingsBtn.addEventListener('click', toggleFilterPanel);
+}
+if(gameSettingsBtn){
+  gameSettingsBtn.addEventListener('click', toggleFilterPanel);
+}
+
+document.addEventListener('click',(e)=>{
+  if(filterPanel.style.display==='block' &&
+     !filterPanel.contains(e.target) &&
+     e.target.id !== 'settings-btn' &&
+     e.target.id !== 'setup-settings-btn' &&
+     e.target.id !== 'img-filter-close'){
+      filterPanel.style.display='none';
+  }
+});
+
+// ---- IMAGE FILTERS ----
+const FILTERS_DEF = {
+  grayscale: { label:'ขาวดำ',  css:'grayscale(1)' },
+  invert:    { label:'กลับสี', css:'invert(1)' },
+  sepia:     { label:'Sepia',  css:'sepia(1)' },
+  hue:       { label:'หมุนสี', css:'hue-rotate(180deg)' },
+  'flip-h':  { label:'กลับซ้าย-ขวา', css:null },
+  'flip-v':  { label:'กลับบน-ล่าง',  css:null },
+  pixel:     { label:'Pixel',  css:null },
+  blur:      { label:'เบลอ',   css:null },
+};
+
+let activeFilters = new Set();
+let pixelTimer = null;
+
+document.querySelectorAll('.flt-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const key = btn.dataset.filter;
+    if(activeFilters.has(key)){
+      activeFilters.delete(key);
+      btn.classList.remove('active');
+    } else {
+      activeFilters.add(key);
+      btn.classList.add('active');
+    }
+    applyImageFilters();
+    playSound('click');
+  });
+});
+
+document.getElementById('flt-clear-btn').addEventListener('click', ()=>{
+  activeFilters.clear();
+  document.querySelectorAll('.flt-btn').forEach(b=>b.classList.remove('active'));
+  applyImageFilters();
+  playSound('click');
+});
+
+function getCurrentScale(){
+  if(revealed) return ZOOM_END;
+  return Math.max(ZOOM_END, ZOOM_START - (ZOOM_START-ZOOM_END)*(wrongGuesses.length/MAX_ATTEMPTS));
+}
+
+function getDynamicBlur(){
+  const scale = getCurrentScale();
+  const t = (ZOOM_START - scale) / (ZOOM_START - ZOOM_END);
+  return BLUR_MIN + (BLUR_MAX - BLUR_MIN) * t;
+}
+
+function getDynamicPixelSize(){
+  const scale = getCurrentScale();
+  const t = (ZOOM_START - scale) / (ZOOM_START - ZOOM_END);
+  return PIXEL_SIZE_MIN + (PIXEL_SIZE_MAX - PIXEL_SIZE_MIN) * t;
+}
+
+function applyImageFilters(){
+  const img = document.getElementById('hero-img');
+  const canvas = document.getElementById('pixel-canvas');
+
+  let cssFilters = [];
+  const blurVal = getDynamicBlur();
+  activeFilters.forEach(k=>{
+    if(k === 'blur') {
+      cssFilters.push(`blur(${blurVal.toFixed(2)}px)`);
+    } else if(FILTERS_DEF[k] && FILTERS_DEF[k].css) {
+      cssFilters.push(FILTERS_DEF[k].css);
+    }
+  });
+  img.style.filter = cssFilters.join(' ');
+
+  let flipX = activeFilters.has('flip-h') ? -1 : 1;
+  let flipY = activeFilters.has('flip-v') ? -1 : 1;
+  img._flipX = flipX;
+  img._flipY = flipY;
+  reapplyZoomWithFlip();
+
+  if(activeFilters.has('pixel')){
+    canvas.style.display = 'block';
+    img.style.visibility = 'hidden';
+    canvas.style.zIndex = '2';
+    schedulePixelDraw();
+  } else {
+    canvas.style.display = 'none';
+    img.style.visibility = 'visible';
+    clearTimeout(pixelTimer);
+  }
+
+  const indicator = document.getElementById('img-filter-indicator');
+  const badgeWrap = document.getElementById('filter-active-badges');
+  
+  indicator.innerHTML = '';
+  badgeWrap.innerHTML = '';
+  
+  if(activeFilters.size === 0){
+    const noFilter = document.createElement('span');
+    noFilter.className = 'no-filter-text';
+    noFilter.textContent = 'ยังไม่ได้เลือกฟิลเตอร์';
+    badgeWrap.appendChild(noFilter);
+  } else {
+    activeFilters.forEach(k=>{
+      const lbl = FILTERS_DEF[k] ? FILTERS_DEF[k].label : k;
+      
+      const b1 = document.createElement('div');
+      b1.className='fi-badge'; 
+      b1.textContent=lbl;
+      indicator.appendChild(b1);
+      
+      const b2 = document.createElement('div');
+      b2.className='filter-badge'; 
+      b2.textContent=lbl;
+      badgeWrap.appendChild(b2);
+    });
+  }
+}
+
+function reapplyZoomWithFlip(){
+  const img = document.getElementById('hero-img');
+  const scale = getCurrentScale();
+  const factor = scale>1?(scale-1)/(ZOOM_START-1):0;
+  const ix = (img._ix||0)*factor;
+  const iy = (img._iy||0)*factor;
+  const fx = (img._flipX||1);
+  const fy = (img._flipY||1);
+  img.style.transform = `scale(${scale*fx}, ${scale*fy}) translate(${ix}%,${iy}%)`;
+}
+
+function schedulePixelDraw(){
+  clearTimeout(pixelTimer);
+  const img = document.getElementById('hero-img');
+  if(!img.naturalWidth){
+    pixelTimer = setTimeout(schedulePixelDraw, 100);
+    return;
+  }
+  drawPixelCanvas();
+  pixelTimer = setTimeout(schedulePixelDraw, 300);
+}
+
+function drawPixelCanvas(){
+  const img = document.getElementById('hero-img');
+  const canvas = document.getElementById('pixel-canvas');
+  const wrapper = document.getElementById('img-wrapper');
+  const W = wrapper.offsetWidth || 480;
+  const H = wrapper.offsetHeight || 480;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const scale = getCurrentScale();
+  const factor = scale>1?(scale-1)/(ZOOM_START-1):0;
+  const ix = (img._ix||0)*factor / 100;
+  const iy = (img._iy||0)*factor / 100;
+  const fx = (img._flipX||1);
+  const fy = (img._flipY||1);
+
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = W;
+  tempCanvas.height = H;
+  const tempCtx = tempCanvas.getContext('2d');
+
+  const imgAR = img.naturalWidth / img.naturalHeight;
+  const wrapAR = W / H;
+  let sx, sy, sw, sh;
+  if (imgAR > wrapAR) {
+    sh = img.naturalHeight;
+    sw = sh * wrapAR;
+    sx = (img.naturalWidth - sw) / 2;
+    sy = 0;
+  } else {
+    sw = img.naturalWidth;
+    sh = sw / wrapAR;
+    sx = 0;
+    sy = (img.naturalHeight - sh) / 2;
+  }
+  tempCtx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
+
+  const PIXEL_SIZE = Math.max(1, Math.floor(getDynamicPixelSize()));
+  const pW = Math.max(1, Math.ceil(W / PIXEL_SIZE));
+  const pH = Math.max(1, Math.ceil(H / PIXEL_SIZE));
+  const pixelCanvas = document.createElement('canvas');
+  pixelCanvas.width = pW;
+  pixelCanvas.height = pH;
+  const pixelCtx = pixelCanvas.getContext('2d');
+  pixelCtx.imageSmoothingEnabled = false;
+  pixelCtx.drawImage(tempCanvas, 0, 0, W, H, 0, 0, pW, pH);
+
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  ctx.translate(W/2, H/2);
+  ctx.scale(scale * fx, scale * fy);
+  ctx.translate(-W/2 + ix * W, -H/2 + iy * H);
+  ctx.drawImage(pixelCanvas, 0, 0, pW, pH, 0, 0, W, H);
+  ctx.restore();
+
+  let cssFilters = [];
+  const blurVal = getDynamicBlur();
+  activeFilters.forEach(k=>{
+    if(k === 'blur') {
+      cssFilters.push(`blur(${blurVal.toFixed(2)}px)`);
+    } else if(k !== 'pixel' && FILTERS_DEF[k] && FILTERS_DEF[k].css) {
+      cssFilters.push(FILTERS_DEF[k].css);
+    }
+  });
+  canvas.style.filter = cssFilters.join(' ');
+}
+
+function resetFiltersForNewQuestion(){
+  document.querySelectorAll('.flt-btn').forEach(btn=>{
+    btn.classList.toggle('active', activeFilters.has(btn.dataset.filter));
+  });
+  const img = document.getElementById('hero-img');
+  img._flipX = activeFilters.has('flip-h')?-1:1;
+  img._flipY = activeFilters.has('flip-v')?-1:1;
+  img.onload = ()=>{ applyImageFilters(); };
+  setTimeout(applyImageFilters, 200);
+}
+
+document.getElementById('next-btn').addEventListener('click',()=>{
+  clearTimeout(pixelTimer);
+  resetFiltersForNewQuestion();
+}, true);
+
+document.getElementById('replay-btn').addEventListener('click',()=>{
+  document.getElementById('result').style.display='none';
+  document.getElementById('setup').style.display='flex';
+  playSound('click');
+});
+</script>
+</body>
+</html>
