@@ -2,689 +2,982 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>ROV Hero Quiz</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Noto+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
-  :root {
-    --bg:      #0a0c12;
-    --surface: #111420;
-    --card:    #181d2e;
-    --border:  #252d45;
-    --accent:  #4f8ef7;
-    --gold:    #f0c040;
-    --red:     #e05555;
-    --green:   #3ecf8e;
-    --orange:  #f08c40;
-    --text:    #e8eaf0;
-    --muted:   #7a82a0;
-    --glow:    rgba(79,142,247,.35);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{height:100%}
-  body{
-    background:var(--bg);color:var(--text);
-    font-family:'Noto Sans Thai','Rajdhani',sans-serif;
-    min-height:100vh;overflow-x:hidden;user-select:none;
-  }
-  body::before{
-    content:'';position:fixed;inset:0;
-    background-image:
-      linear-gradient(rgba(79,142,247,.04) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(79,142,247,.04) 1px,transparent 1px);
-    background-size:40px 40px;pointer-events:none;z-index:0;
-  }
-  #app{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 16px 48px}
+:root {
+  --bg: #080a10;
+  --surface: #0e111a;
+  --card: #141825;
+  --card2: #1a2035;
+  --border: #1e2640;
+  --border2: #2a3358;
+  --accent: #5b9cf6;
+  --accent2: #7b5cf6;
+  --gold: #f5c842;
+  --red: #e85555;
+  --green: #40d9a0;
+  --orange: #f09040;
+  --text: #e6eaf5;
+  --muted: #6a738c;
+  --muted2: #8a93ac;
+  --glow: rgba(91,156,246,.3);
+  --glow2: rgba(123,92,246,.3);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Noto Sans Thai','Rajdhani',sans-serif;
+  min-height:100vh;overflow-x:hidden;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse 70% 40% at 50% -5%,rgba(91,156,246,.05) 0%,transparent 55%);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:80px 80px;
+  pointer-events:none;z-index:0;
+}
+#app{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 16px 64px}
 
-  #loading{
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    min-height:60vh;gap:16px;
-  }
-  .spinner{
-    width:40px;height:40px;border-radius:50%;
-    border:3px solid var(--border);
-    border-top-color:var(--accent);
-    animation:spin .8s linear infinite;
-  }
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .load-err{color:var(--red);text-align:center;font-size:14px;line-height:1.7}
+/* ── LOADING ── */
+#loading{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:80vh;gap:20px;
+}
+.spinner{
+  width:44px;height:44px;border-radius:50%;
+  border:3px solid var(--border);border-top-color:var(--accent);
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-err{color:var(--red);text-align:center;font-size:14px;line-height:1.8}
 
-  header{text-align:center;padding:36px 0 28px}
-  header .logo{
-    font-family:'Rajdhani',sans-serif;
-    font-size:clamp(28px,6vw,52px);font-weight:700;letter-spacing:.05em;
-    background:linear-gradient(135deg,#6fb4ff,#4f8ef7 40%,#a78bfa);
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  }
-  header .sub{color:var(--muted);font-size:13px;margin-top:6px;letter-spacing:.08em;text-transform:uppercase}
+header{text-align:center;padding:24px 0 20px}
+header .logo{
+  font-family:'Rajdhani',sans-serif;
+  font-size:clamp(22px,5vw,40px);font-weight:700;letter-spacing:.06em;
+  color:var(--text);
+}
+header .logo span{color:var(--accent)}
+header .sub{
+  color:var(--muted);font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;margin-top:4px;
+}
+.header-divider{display:none}
 
-  #setup{display:none;flex-direction:column;gap:24px;position:relative;z-index:100;}
-  #setup-settings-btn{position:relative;z-index:10001;}
-  .section-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-  .count-grid{display:flex;flex-wrap:wrap;gap:10px}
-  .count-btn{
-    flex:1;min-width:70px;background:var(--card);border:1px solid var(--border);
-    color:var(--muted);border-radius:8px;padding:12px 0;
-    font-family:inherit;font-size:18px;font-weight:600;cursor:pointer;transition:all .15s;
-  }
-  .count-btn:hover{border-color:var(--accent);color:var(--text);transform:translateY(-2px)}
-  .count-btn.active{background:rgba(79,142,247,.15);border-color:var(--accent);color:var(--accent);box-shadow:0 0 14px var(--glow)}
-  .tab-row{display:flex;flex-wrap:wrap;gap:8px}
-  .filter-type-btn,.filter-val-btn{
-    background:var(--card);border:1px solid var(--border);
-    color:var(--muted);border-radius:6px;padding:8px 14px;
-    font-family:inherit;font-size:13px;cursor:pointer;transition:all .15s;
-  }
-  .filter-type-btn.active{background:rgba(79,142,247,.15);border-color:var(--accent);color:var(--accent)}
-  .filter-val-btn.active{
-    background:rgba(240,192,64,.12);
-    border-color:var(--gold);
-    color:var(--gold);
-    box-shadow:0 0 10px rgba(240,192,64,.2);
-  }
-  .filter-val-btn:hover{border-color:var(--accent);color:var(--text)}
-  .filter-clear-btn{
-    background:none;
-    border:1px solid var(--border);
-    color:var(--muted);
-    border-radius:6px;
-    padding:6px 12px;
-    font-family:inherit;
-    font-size:11px;
-    cursor:pointer;
-    transition:all .15s;
-    margin-left:auto;
-  }
-  .filter-clear-btn:hover{border-color:var(--red);color:var(--red)}
-  .filter-clear-btn:disabled{opacity:.3;cursor:not-allowed}
-  .filter-values-header{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    margin-bottom:8px;
-    font-size:11px;
-    color:var(--muted);
-  }
-  .filter-count-badge{
-    background:rgba(240,192,64,.15);
-    border:1px solid rgba(240,192,64,.3);
-    color:var(--gold);
-    border-radius:10px;
-    padding:2px 8px;
-    font-size:10px;
-    font-weight:600;
-  }
-  #filter-values{min-height:44px}
-  .start-btn{
-    width:100%;padding:16px;
-    background:linear-gradient(135deg,#4f8ef7,#7c3aed);
-    border:none;border-radius:10px;color:#fff;
-    font-family:inherit;font-size:18px;font-weight:700;letter-spacing:.06em;
-    cursor:pointer;transition:opacity .15s,transform .1s;
-    box-shadow:0 4px 24px rgba(79,142,247,.4);
-  }
-  .start-btn:hover{opacity:.88;transform:translateY(-1px)}
-  .start-btn:active{transform:translateY(0)}
-  .start-btn:disabled{opacity:.4;cursor:not-allowed}
+/* ── HOW TO PLAY ── */
+.howto{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  margin-bottom:24px;
+}
+.howto-step{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:14px 12px;text-align:center;
+  transition:border-color .2s,transform .2s;
+}
+.howto-step:hover{border-color:var(--border2);transform:translateY(-3px)}
+.howto-step .icon{
+  font-size:24px;margin-bottom:6px;display:block;
+}
+.howto-step .step-title{font-size:11px;font-weight:700;color:var(--text);margin-bottom:3px;letter-spacing:.04em}
+.howto-step .step-desc{font-size:10px;color:var(--muted2);line-height:1.5}
 
-  #game{display:none;flex-direction:column;gap:0}
-  .game-topbar{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:14px 0 18px;flex-wrap:wrap;gap:8px;
-  }
-  .score-pill{
-    background:var(--card);border:1px solid var(--border);
-    border-radius:20px;padding:6px 16px;font-size:13px;
-  }
-  .score-pill span{color:var(--accent);font-weight:700}
-  .progress-pill{color:var(--muted);font-size:13px}
-  .top-right-btns{display:flex;gap:8px;align-items:center}
-  .settings-btn,.end-game-btn{
-    width:36px;height:36px;border-radius:8px;
-    border:1px solid var(--border);
-    background:var(--card);color:var(--muted);
-    cursor:pointer;transition:.25s;
-    font-family:inherit;
-  }
-  .settings-btn:hover{transform:rotate(90deg);color:var(--accent);}
-  .end-game-btn{
-    width:auto;padding:0 12px;font-size:12px;font-weight:600;
-  }
-  .end-game-btn:hover{border-color:var(--red);color:var(--red)}
-  .skip-btn{
-    background:none;border:1px solid var(--border);
-    color:var(--muted);border-radius:6px;padding:6px 12px;
-    font-family:inherit;font-size:12px;cursor:pointer;transition:all .15s;
-  }
-  .skip-btn:hover{border-color:var(--red);color:var(--red)}
-  #reveal-hint-btn{
-    display:none;
-    background:rgba(240,140,64,.12);border:1px solid rgba(240,140,64,.45);
-    color:var(--orange);border-radius:6px;padding:6px 12px;
-    font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;
-    transition:all .15s;animation:pulse-orange 1.5s ease-in-out infinite;
-  }
-  #reveal-hint-btn:hover{background:rgba(240,140,64,.25)}
-  @keyframes pulse-orange{
-    0%,100%{box-shadow:0 0 0 0 rgba(240,140,64,.4)}
-    50%{box-shadow:0 0 0 6px rgba(240,140,64,0)}
-  }
-  .prog-bar-wrap{height:3px;background:var(--border);border-radius:3px;margin-bottom:20px}
-  .prog-bar-fill{height:100%;background:linear-gradient(90deg,#4f8ef7,#a78bfa);border-radius:3px;transition:width .4s ease}
+/* ── SETUP ── */
+#setup{display:none;flex-direction:column;gap:20px}
+.section-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:16px 18px;
+}
+.section-card-title{
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted2);margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.section-card-title::before{
+  content:'';display:inline-block;width:3px;height:14px;
+  background:var(--accent);border-radius:2px;
+}
 
-  .attempt-dots{
-    display:flex;gap:6px;align-items:center;justify-content:center;
-    margin-bottom:16px;
-  }
-  .dot{
-    width:10px;height:10px;border-radius:50%;
-    background:var(--border);border:1px solid var(--border);
-    transition:background .2s,border-color .2s;
-  }
-  .dot.used{background:var(--red);border-color:var(--red)}
-  .dot.correct{background:var(--green);border-color:var(--green)}
-  .dot-label{font-size:11px;color:var(--muted);margin-left:4px}
+.count-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.count-btn{
+  background:var(--surface);border:1.5px solid var(--border);
+  color:var(--muted2);border-radius:10px;padding:14px 0;
+  font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;
+  transition:all .18s;
+  min-height:48px;
+}
+.count-btn:hover{border-color:var(--border2);color:var(--text);transform:translateY(-2px)}
+.count-btn.active{
+  background:linear-gradient(135deg,rgba(91,156,246,.15),rgba(123,92,246,.15));
+  border-color:var(--accent);color:var(--accent);
+  box-shadow:0 0 16px var(--glow),inset 0 1px 0 rgba(255,255,255,.05);
+}
 
-  .img-wrapper{
-    position:relative;width:100%;max-width:480px;margin:0 auto;
-    aspect-ratio:1/1;border-radius:16px;overflow:hidden;
-    border:1px solid var(--border);background:var(--card);
-    box-shadow:0 8px 40px rgba(0,0,0,.6);
-    transition:transform .3s;
-  }
-  .img-wrapper img{
-    width:100%;height:100%;object-fit:cover;
-    transform:scale(10) translate(var(--ix,0%),var(--iy,0%));
-    transition:transform 1.2s cubic-bezier(.25,.46,.45,.94);
-    pointer-events:none;-webkit-user-drag:none;
-    position:relative;z-index:1;
-  }
-  .img-overlay{position:absolute;inset:0;z-index:2;background:transparent}
-  .hint-badge{
-    position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
-    background:rgba(0,0,0,.65);backdrop-filter:blur(4px);
-    border:1px solid var(--border);border-radius:20px;
-    padding:5px 14px;font-size:12px;color:var(--muted);
-    z-index:3;white-space:nowrap;
-  }
+.filter-type-tabs{
+  display:flex;background:var(--surface);border-radius:10px;
+  padding:4px;gap:4px;border:1px solid var(--border);margin-bottom:14px;
+}
+.filter-type-btn{
+  flex:1;background:none;border:none;
+  color:var(--muted2);border-radius:7px;padding:10px 8px;
+  font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;
+  min-height:44px;
+}
+.filter-type-btn:hover{color:var(--text)}
+.filter-type-btn .tab-icon{
+  width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:3px;
+  opacity:.6;transition:opacity .18s;
+}
+.filter-type-btn.active .tab-icon{opacity:1;}
+.filter-type-btn.active{
+  background:var(--card2);
+  color:var(--accent);
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+.filter-values-header{
+  display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:11px;color:var(--muted);
+}
+.filter-count-badge{
+  background:rgba(245,200,66,.15);border:1px solid rgba(245,200,66,.3);
+  color:var(--gold);border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700;
+}
+.filter-val-btn{
+  background:var(--surface);border:1.5px solid var(--border);
+  color:var(--muted2);border-radius:8px;padding:10px 14px;
+  font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:7px;
+  min-height:44px;
+}
+.filter-val-icon{
+  width:20px;height:20px;object-fit:contain;flex-shrink:0;
+  opacity:.7;transition:opacity .15s;
+}
+.filter-val-btn.active .filter-val-icon{opacity:1;}
+.filter-val-btn:hover{border-color:var(--border2);color:var(--text)}
+.filter-val-btn.active{
+  background:rgba(245,200,66,.1);border-color:var(--gold);
+  color:var(--gold);box-shadow:0 0 10px rgba(245,200,66,.15);
+}
+.filter-clear-btn{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  border-radius:6px;padding:6px 12px;font-family:inherit;font-size:11px;cursor:pointer;
+  transition:all .15s;margin-left:auto;
+  min-height:32px;
+}
+.filter-clear-btn:hover{border-color:var(--red);color:var(--red)}
+.filter-clear-btn:disabled{opacity:.3;cursor:not-allowed}
 
-  .img-filter-panel{
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    width:90%;
-    max-width:500px;
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:16px;
-    overflow:hidden;
-    z-index:99999;
-    display:none;
-    box-shadow:0 20px 60px rgba(0,0,0,.8);
-    animation:modalIn .3s cubic-bezier(.25,.46,.45,.94);
-  }
-  @keyframes modalIn{
-    from{opacity:0;transform:translate(-50%,-50%) scale(.9)}
-    to{opacity:1;transform:translate(-50%,-50%) scale(1)}
-  }
-  .img-filter-panel::before{
-    content:'';
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.7);
-    backdrop-filter:blur(8px);
-    z-index:-1;
-  }
-  .img-filter-header{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:16px 20px;
-    border-bottom:1px solid var(--border);
-    background:linear-gradient(135deg,rgba(79,142,247,.1),rgba(167,139,250,.1));
-  }
-  .img-filter-title{
-    font-size:14px;
-    font-weight:700;
-    color:var(--accent);
-    letter-spacing:.05em;
-  }
-  .img-filter-close{
-    background:none;
-    border:none;
-    color:var(--muted);
-    font-size:20px;
-    cursor:pointer;
-    transition:color .2s;
-    padding:0;
-    line-height:1;
-  }
-  .img-filter-close:hover{color:var(--red)}
-  .img-filter-body{
-    padding:20px;
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-  }
-  .img-filter-active-badges{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    min-height:32px;
-    padding:8px 10px;
-    background:rgba(0,0,0,.25);
-    border-radius:8px;
-    border:1px dashed var(--border);
-    align-items:center;
-  }
-  .filter-badge{
-    background:linear-gradient(135deg,rgba(167,139,250,.2),rgba(79,142,247,.2));
-    border:1px solid rgba(167,139,250,.5);
-    color:#a78bfa;
-    border-radius:6px;
-    padding:4px 10px;
-    font-size:11px;
-    font-weight:600;
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-    animation:badgeIn .25s ease;
-  }
-  .filter-badge::before{
-    content:'✓';
-    font-size:10px;
-    color:var(--green);
-    font-weight:700;
-  }
-  @keyframes badgeIn{
-    from{opacity:0;transform:scale(.7) translateY(-4px)}
-    to{opacity:1;transform:scale(1) translateY(0)}
-  }
-  .no-filter-text{
-    color:var(--muted);
-    font-size:11px;
-    font-style:italic;
-    opacity:.7;
-  }
-  .flt-row{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(100px,1fr));
-    gap:10px;
-  }
-  .flt-btn{
-    background:var(--surface);
-    border:2px solid var(--border);
-    color:var(--muted);
-    border-radius:10px;
-    padding:12px;
-    font-family:inherit;
-    font-size:13px;
-    font-weight:600;
-    cursor:pointer;
-    transition:all .2s;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-  }
-  .flt-btn:hover{
-    border-color:var(--accent);
-    color:var(--text);
-    transform:translateY(-2px);
-    box-shadow:0 4px 12px rgba(79,142,247,.2);
-  }
-  .flt-btn.active{
-    background:linear-gradient(135deg,rgba(79,142,247,.2),rgba(167,139,250,.2));
-    border-color:var(--accent);
-    color:var(--accent);
-    box-shadow:0 0 20px rgba(79,142,247,.3);
-  }
-  .flt-clear-btn{
-    background:rgba(224,85,85,.1);
-    border:1px solid rgba(224,85,85,.3);
-    color:var(--red);
-    border-radius:8px;
-    padding:10px 20px;
-    font-family:inherit;
-    font-size:13px;
-    font-weight:600;
-    cursor:pointer;
-    transition:all .2s;
-    align-self:center;
-  }
-  .flt-clear-btn:hover{
-    background:rgba(224,85,85,.2);
-    border-color:var(--red);
-  }
-  .img-filter-indicator{
-    position:absolute;top:10px;left:10px;
-    display:flex;flex-wrap:wrap;gap:4px;z-index:4;max-width:90%;
-  }
-  .img-filter-indicator .fi-badge{
-    background:rgba(0,0,0,.65);backdrop-filter:blur(4px);
-    border:1px solid rgba(167,139,250,.5);color:#a78bfa;
-    border-radius:4px;padding:2px 7px;font-size:10px;pointer-events:none;
-  }
-  #pixel-canvas{
-    position:absolute;inset:0;width:100%;height:100%;
-    object-fit:cover;z-index:1;pointer-events:none;
-    -webkit-user-drag:none;display:none;
-  }
+.start-btn{
+  width:100%;padding:16px;
+  background:var(--accent);
+  border:none;border-radius:10px;color:#fff;
+  font-family:inherit;font-size:16px;font-weight:700;letter-spacing:.04em;
+  cursor:pointer;transition:background .18s,transform .12s,opacity .18s;
+  min-height:52px;
+}
+.start-btn:hover{background:#4a8be0;transform:translateY(-1px)}
+.start-btn:active{transform:translateY(0)}
+.start-btn:disabled{opacity:.4;cursor:not-allowed}
 
-  .hints-section{
-    margin-top:16px;padding:16px;
-    background:var(--card);border:1px solid var(--border);border-radius:10px;
-  }
-  .hangman-display{
-    text-align:center;
-    font-size:28px;
-    font-weight:700;
-    letter-spacing:.5em;
-    margin-bottom:16px;
-    font-family:'Rajdhani',monospace;
-    min-height:44px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:4px;
-    line-height:1;
-  }
-  .hm-char{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:28px;
-    height:36px;
-    color:var(--accent);
-    font-weight:700;
-    transition:all .3s;
-    animation:charReveal .4s ease;
-  }
-  .hm-hidden{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:28px;
-    height:36px;
-    color:rgba(122,130,160,.35);
-    font-size:20px;
-    font-weight:400;
-  }
-  .hm-space{
-    width:14px;
-    height:36px;
-  }
-  @keyframes charReveal{
-    0%{opacity:0;transform:translateY(-8px) scale(.7)}
-    60%{transform:translateY(2px) scale(1.05)}
-    100%{opacity:1;transform:translateY(0) scale(1)}
-  }
+/* ── GAME ── */
+#game{display:none;flex-direction:column;gap:0}
+
+.game-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0 16px;flex-wrap:wrap;gap:8px;
+}
+.score-display{
+  display:flex;align-items:baseline;gap:6px;
+}
+.score-label{font-size:11px;color:var(--muted);letter-spacing:.06em}
+.score-value{
+  font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;
+  color:var(--text);line-height:1;
+  transition:transform .15s;
+}
+.score-value.bump{animation:scoreBump .25s ease}
+@keyframes scoreBump{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.25)}
+  100%{transform:scale(1)}
+}
+.streak-pill{
+  display:flex;align-items:center;gap:5px;
+  background:var(--card2);border:1px solid var(--border2);
+  border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;
+  color:var(--muted2);transition:all .25s;
+}
+.streak-pill.active{
+  border-color:rgba(240,144,64,.4);
+  color:var(--orange);
+}
+.streak-icon{font-size:13px}
+
+.top-right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.icon-btn{
+  width:40px;height:40px;border-radius:9px;border:1px solid var(--border2);
+  background:var(--card);color:var(--muted2);cursor:pointer;
+  transition:.2s;font-family:inherit;font-size:14px;display:flex;align-items:center;justify-content:center;
+}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent);transform:rotate(30deg)}
+.danger-btn{
+  background:none;border:1px solid var(--border2);color:var(--muted2);
+  border-radius:9px;padding:0 12px;height:40px;font-family:inherit;font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .18s;
+}
+.danger-btn:hover{border-color:var(--red);color:var(--red)}
+.skip-btn{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  border-radius:9px;padding:8px 12px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;
+  min-height:40px;
+}
+.skip-btn:hover{border-color:var(--orange);color:var(--orange)}
+
+/* progress */
+.prog-wrap{margin-bottom:16px}
+.prog-labels{
+  display:flex;justify-content:space-between;
+  font-size:12px;color:var(--muted2);margin-bottom:6px;
+}
+.prog-labels .prog-q{font-weight:700;color:var(--text)}
+.prog-track{height:6px;background:var(--card2);border-radius:6px;overflow:hidden}
+.prog-fill{
+  height:100%;border-radius:6px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.prog-fill::after{
+  content:'';position:absolute;top:0;right:0;
+  width:20px;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3));
+}
+
+/* reveal hint button */
+#reveal-hint-btn{
+  display:none;
+  align-items:center;gap:6px;
+  background:rgba(229,85,85,.12);border:1px solid rgba(229,85,85,.35);
+  color:var(--red);border-radius:8px;padding:8px 14px;
+  font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;
+  transition:all .18s;animation:revealPulse 2s ease infinite;
+  min-height:36px;
+}
+@keyframes revealPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(229,85,85,.4)}
+  50%{box-shadow:0 0 0 8px rgba(229,85,85,0)}
+}
+#reveal-hint-btn:hover{background:rgba(229,85,85,.25)}
+
+/* attempt dots */
+.attempt-bar{
+  display:flex;align-items:center;gap:6px;
+  margin-bottom:14px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:10px 14px;
+}
+.attempt-bar-label{font-size:11px;color:var(--muted2);margin-right:4px;white-space:nowrap}
+.attempt-dots{display:flex;gap:4px;flex:1;flex-wrap:wrap}
+.dot{
+  width:16px;height:7px;border-radius:4px;
+  background:var(--border2);transition:all .25s;
+}
+.dot.used{background:var(--red);box-shadow:0 0 6px rgba(232,85,85,.4)}
+.dot.correct{background:var(--green);box-shadow:0 0 6px rgba(64,217,160,.4);width:22px}
+.attempt-count{font-size:12px;color:var(--muted2);white-space:nowrap;font-weight:600;margin-left:4px}
+
+/* image */
+.img-area{
+  display:grid;gap:16px;
+  grid-template-columns:1fr;
+  margin-bottom:16px;
+}
+.img-wrapper{
+  position:relative;width:100%;aspect-ratio:1/1;
+  border-radius:18px;overflow:hidden;border:1px solid var(--border2);
+  background:var(--card);box-shadow:0 12px 48px rgba(0,0,0,.6);
+  transition:transform .3s,box-shadow .3s;
+  max-width:400px;
+  margin:0 auto;
+}
+.img-wrapper:hover{box-shadow:0 16px 56px rgba(0,0,0,.7)}
+.img-wrapper img{
+  width:100%;height:100%;object-fit:cover;
+  transform:scale(10) translate(var(--ix,0%),var(--iy,0%));
+  transition:transform 1.2s cubic-bezier(.25,.46,.45,.94);
+  pointer-events:none;-webkit-user-drag:none;position:relative;z-index:1;
+}
+.img-overlay{position:absolute;inset:0;z-index:2;background:transparent}
+#pixel-canvas{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;z-index:1;pointer-events:none;-webkit-user-drag:none;display:none;
+}
+.img-filter-indicator{
+  position:absolute;top:10px;left:10px;
+  display:flex;flex-wrap:wrap;gap:4px;z-index:4;max-width:90%;
+}
+.img-filter-indicator .fi-badge{
+  background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+  border:1px solid rgba(123,92,246,.5);color:#b09cf8;
+  border-radius:4px;padding:2px 7px;font-size:10px;pointer-events:none;
+}
+
+.zoom-badge{
+  position:absolute;bottom:10px;left:10px;
+  background:rgba(0,0,0,.65);backdrop-filter:blur(6px);
+  border:1px solid var(--border2);border-radius:20px;
+  padding:5px 12px;font-size:11px;color:var(--muted2);
+  z-index:3;display:flex;align-items:center;gap:5px;
+}
+.zoom-badge-icon{font-size:12px}
+
+/* hint panel */
+.hint-panel{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:16px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.hint-panel-title{
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:6px;
+}
+.hint-panel-title i{color:var(--gold);font-size:12px}
+
+.hangman-display{
+  text-align:center;
+  font-size:clamp(18px,4vw,28px);
+  font-weight:700;letter-spacing:.3em;
+  font-family:'Rajdhani',monospace;
+  min-height:36px;display:flex;align-items:center;
+  justify-content:center;flex-wrap:wrap;gap:2px;
+  background:var(--surface);border-radius:10px;padding:10px;
+  border:1px solid var(--border);
+}
+.hm-char{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:20px;height:28px;color:var(--accent);font-weight:700;
+  animation:charReveal .35s ease;
+}
+.hm-hidden{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:20px;height:28px;color:rgba(100,110,140,.4);font-size:16px;
+}
+.hm-space{min-width:12px;height:28px}
+@keyframes charReveal{
+  0%{opacity:0;transform:translateY(-8px) scale(.7)}
+  60%{transform:translateY(2px) scale(1.08)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+
+.hint-info-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+}
+.hint-info-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px;
+}
+.hint-info-label{font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.hint-info-value{font-size:13px;font-weight:700;color:var(--gold)}
+.hint-info-value.hidden{color:var(--muted);font-style:italic;font-weight:400;font-size:11px}
+
+.hint-buttons{display:flex;flex-direction:column;gap:8px}
+.hint-btn{
+  background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);
+  color:var(--gold);border-radius:9px;padding:12px 14px;
+  font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;
+  transition:all .18s;display:flex;align-items:center;gap:8px;
+  text-align:left;
+  min-height:44px;
+}
+.hint-btn:hover:not(:disabled){background:rgba(245,200,66,.16);border-color:rgba(245,200,66,.5)}
+.hint-btn:disabled{opacity:.4;cursor:not-allowed}
+.hint-btn.used{background:rgba(100,110,140,.08);border-color:var(--border);color:var(--muted)}
+.hint-btn-icon{font-size:14px;flex-shrink:0}
+.hint-btn-cost{
+  margin-left:auto;background:rgba(245,200,66,.15);border-radius:4px;
+  padding:2px 7px;font-size:10px;
+}
+.hint-btn-img{
+  width:22px;height:22px;object-fit:contain;flex-shrink:0;
+  filter:brightness(0) saturate(100%) invert(79%) sepia(66%) saturate(540%) hue-rotate(358deg) brightness(101%) contrast(92%);
+}
+.hint-btn.used .hint-btn-img{filter:grayscale(1) opacity(.4);}
+
+
+/* answer zone */
+.answer-zone{margin-bottom:16px}
+.input-wrap{
+  position:relative;display:flex;align-items:stretch;
+  background:var(--card);border:1.5px solid var(--border2);
+  border-radius:13px;overflow:hidden;transition:border-color .2s,box-shadow .2s;
+}
+.input-wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+.input-wrap.invalid{
+  border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,144,64,.25);
+  animation:shakeInput .35s ease;
+}
+@keyframes shakeInput{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-7px)}
+  75%{transform:translateX(7px)}
+}
+.input-wrap.disabled-wrap{opacity:.5;pointer-events:none}
+.input-wrap input{
+  flex:1;background:none;border:none;outline:none;
+  color:var(--text);font-family:inherit;font-size:16px;
+  padding:14px 16px;min-width:0;
+}
+.input-wrap input::placeholder{color:var(--muted)}
+.submit-btn{
+  background:var(--accent);
+  border:none;color:#fff;font-family:inherit;font-weight:700;
+  font-size:14px;letter-spacing:.04em;padding:0 20px;min-width:80px;cursor:pointer;
+  transition:background .18s;
+}
+.submit-btn:hover{background:#4a8be0}
+.submit-btn:disabled{opacity:.4;cursor:not-allowed}
+
+#suggestions{
+  background:var(--card2);border:1px solid var(--border2);border-top:none;
+  border-radius:0 0 12px 12px;max-height:280px;overflow-y:auto;display:none;
+}
+.sug-item{
+  padding:12px 16px;font-size:14px;cursor:pointer;transition:background .1s;
+  border-bottom:1px solid var(--border);
+  min-height:44px;
+  display:flex;
+  align-items:center;
+}
+.sug-item:last-child{border-bottom:none}
+.sug-item:hover{background:rgba(91,156,246,.12);color:var(--accent)}
+.sug-item em{color:var(--accent);font-style:normal;font-weight:700}
+
+.wrong-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:20px}
+.wrong-tag{
+  background:rgba(232,85,85,.08);border:1px solid rgba(232,85,85,.2);
+  color:var(--red);border-radius:6px;padding:4px 10px;font-size:12px;
+  text-decoration:line-through;opacity:.7;
+}
+
+.feedback{
+  text-align:center;padding:12px;border-radius:10px;
+  margin-top:10px;font-size:13px;font-weight:600;
+  opacity:0;transition:opacity .2s;
+}
+.feedback.show{opacity:1}
+.feedback.wrong{background:rgba(232,85,85,.1);color:var(--red);border:1px solid rgba(232,85,85,.2)}
+.feedback.correct{background:rgba(64,217,160,.1);color:var(--green);border:1px solid rgba(64,217,160,.2)}
+.feedback.invalid{background:rgba(240,144,64,.1);color:var(--orange);border:1px solid rgba(240,144,64,.2)}
+
+/* reveal banner */
+.reveal-banner{
+  display:none;
+  background:var(--card2);
+  border:1px solid var(--border2);
+  border-radius:12px;padding:14px 16px;margin-bottom:16px;
+  align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  animation:bannerIn .35s ease;
+}
+@keyframes bannerIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+
+.reveal-hero-meta{
+  display:flex;flex-direction:column;gap:8px;margin-top:6px;
+}
+.meta-group{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.meta-label{
+  font-size:10px;font-weight:700;color:var(--muted);
+  letter-spacing:.06em;text-transform:uppercase;
+  min-width:45px;
+}
+.meta-tags{
+  display:flex;gap:5px;flex-wrap:wrap;
+}
+.meta-tag{
+  background:var(--card2);border:1px solid var(--border2);
+  border-radius:6px;padding:4px 8px;font-size:11px;
+  display:inline-flex;align-items:center;gap:4px;
+}
+.meta-tag.role-tag{
+  border-color:rgba(91,156,246,.3);
+  background:rgba(91,156,246,.08);
+  color:#8bb8f8;
+}
+.meta-tag.lane-tag{
+  border-color:rgba(245,200,66,.3);
+  background:rgba(245,200,66,.08);
+  color:#f5d87a;
+}
+.reveal-hero-name{font-size:20px;font-weight:700;color:var(--text)}
+.reveal-hero-meta{
+  display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;
+}
+.next-btn{
+  background:var(--accent);
+  border:none;border-radius:9px;color:#fff;
+  font-family:inherit;font-weight:700;font-size:14px;
+  padding:12px 20px;cursor:pointer;transition:background .18s;white-space:nowrap;
+  min-height:44px;
+}
+.next-btn:hover{background:#4a8be0}
+
+/* ── IMAGE FILTER PANEL ── */
+.filter-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);
+  z-index:9998;display:none;animation:fadeIn .2s;
+}
+.filter-overlay.show{display:block}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.img-filter-panel{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--card);border-top:1px solid var(--border2);
+  border-radius:20px 20px 0 0;
+  z-index:9999;display:none;
+  animation:slideUpPanel .3s cubic-bezier(.25,.46,.45,.94);
+  padding:0 0 env(safe-area-inset-bottom,0);
+  max-width:640px;margin:0 auto;
+}
+.img-filter-panel.show{display:block}
+@keyframes slideUpPanel{
+  from{transform:translateY(100%)}
+  to{transform:translateY(0)}
+}
+.filter-handle{
+  width:36px;height:4px;background:var(--border2);
+  border-radius:2px;margin:12px auto 0;
+}
+.img-filter-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px 12px;border-bottom:1px solid var(--border);
+}
+.img-filter-title{font-size:15px;font-weight:700;color:var(--text)}
+.img-filter-close{
+  background:var(--card2);border:none;color:var(--muted2);
+  width:32px;height:32px;border-radius:7px;cursor:pointer;
+  transition:color .2s;font-size:14px;display:flex;align-items:center;justify-content:center;
+}
+.img-filter-close:hover{color:var(--red)}
+.img-filter-body{padding:14px 18px 20px;display:flex;flex-direction:column;gap:12px}
+.flt-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px}
+.flt-btn{
+  background:var(--surface);border:1.5px solid var(--border);
+  color:var(--muted2);border-radius:11px;padding:12px 8px;
+  font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;
+  transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px;
+  min-height:48px;
+}
+.flt-btn:hover{border-color:var(--border2);color:var(--text);transform:translateY(-1px)}
+.flt-btn.active{
+  background:linear-gradient(135deg,rgba(91,156,246,.15),rgba(123,92,246,.15));
+  border-color:var(--accent);color:var(--accent);
+}
+.flt-clear-btn{
+  background:rgba(232,85,85,.08);border:1px solid rgba(232,85,85,.25);
+  color:var(--red);border-radius:9px;padding:12px;
+  font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;
+  min-height:44px;
+}
+.flt-clear-btn:hover{background:rgba(232,85,85,.18)}
+
+/* active filter badges */
+.filter-active-badges{
+  display:flex;flex-wrap:wrap;gap:6px;min-height:28px;
+  padding:8px 10px;background:rgba(0,0,0,.2);
+  border-radius:9px;border:1px dashed var(--border2);align-items:center;
+}
+.filter-badge{
+  background:linear-gradient(135deg,rgba(123,92,246,.2),rgba(91,156,246,.2));
+  border:1px solid rgba(123,92,246,.4);color:#b09cf8;
+  border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;
+  display:inline-flex;align-items:center;gap:5px;animation:badgeIn .2s ease;
+}
+.filter-badge::before{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;font-size:9px;color:var(--green)}
+@keyframes badgeIn{
+  from{opacity:0;transform:scale(.7)}
+  to{opacity:1;transform:scale(1)}
+}
+.no-filter-text{color:var(--muted);font-size:11px;font-style:italic;opacity:.7}
+
+/* ── RESULT ── */
+#result{display:none;flex-direction:column;align-items:center;gap:20px;padding-top:20px;animation:fadeIn .4s}
+.result-hero{
+  width:100%;max-width:500px;padding:20px;
+  background:var(--card);border:1px solid var(--border2);
+  border-radius:20px;text-align:center;
+  box-shadow:0 8px 40px rgba(0,0,0,.5);
+}
+.result-score-ring{
+  width:80px;height:80px;border-radius:50%;
+  border:2px solid var(--border2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin:0 auto 14px;
+  background:var(--surface);
+}
+.result-score-ring .big{font-size:28px;font-weight:700;color:var(--text);font-family:'Rajdhani',sans-serif}
+.result-score-ring .small{font-size:10px;color:var(--muted)}
+.result-title{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;margin-bottom:4px}
+.result-sub{color:var(--muted2);font-size:13px}
+.result-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin-top:14px;
+}
+.stat-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:10px 8px;text-align:center;
+}
+.stat-box .stat-val{font-size:18px;font-weight:700;color:var(--text);font-family:'Rajdhani',sans-serif}
+.stat-box .stat-label{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.08em}
+
+/* ── HINT STATS BOX ── */
+.hint-stats-box{
+  width:100%;max-width:500px;padding:18px;
+  background:var(--card);border:1px solid var(--border2);
+  border-radius:16px;
+  box-shadow:0 8px 40px rgba(0,0,0,.5);
+}
+.hint-stats-title{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted2);margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.hint-stats-title::before{
+  content:'';display:inline-block;width:3px;height:14px;
+  background:var(--gold);border-radius:2px;
+}
+.hint-stats-title i{color:var(--gold);font-size:13px}
+.hint-stats-summary{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:12px;
+  padding-bottom:12px;
+  border-bottom:1px solid var(--border);
+}
+.hint-stats-number{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-width:60px;
+}
+.hint-stats-total{
+  font-family:'Rajdhani',sans-serif;
+  font-size:42px;
+  font-weight:700;
+  color:var(--gold);
+  line-height:1;
+}
+.hint-stats-total-label{
+  font-size:11px;
+  color:var(--muted2);
+  text-align:center;
+  margin-top:2px;
+}
+.hint-stats-penalty{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-start;
+  padding-left:8px;
+}
+.hint-stats-penalty-text{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.4;
+}
+.hint-stats-penalty-value{
+  font-family:'Rajdhani',sans-serif;
+  font-size:18px;
+  font-weight:700;
+  color:var(--red);
+  margin-top:2px;
+}
+.hint-stats-breakdown{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+}
+.hint-stat-item{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:10px;text-align:center;
+}
+.hint-stat-item .hs-icon{
+  width:22px;height:22px;object-fit:contain;margin-bottom:4px;
+  filter:brightness(0) saturate(100%) invert(79%) sepia(66%) saturate(540%) hue-rotate(358deg) brightness(101%) contrast(92%);
+}
+.hint-stat-item .hs-icon.fa-icon{
+  filter:none;color:var(--gold);font-size:18px;margin-bottom:4px;
+}
+.hint-stat-item .hs-val{
+  font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;
+  color:var(--text);line-height:1;
+}
+.hint-stat-item .hs-label{
+  font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;
+}
+.hint-stats-empty{
+  text-align:center;color:var(--muted);font-size:13px;padding:12px 0;font-style:italic;
+}
+
+.hero-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));
+  gap:6px;width:100%;max-width:700px;
+}
+.hero-card{
+  background:var(--card);border-radius:10px;overflow:hidden;
+  border:1px solid var(--border);text-align:center;font-size:10px;
+  position:relative;font-family:inherit;transition:transform .2s;
+}
+.hero-card:hover{transform:translateY(-4px)}
+.hero-card img{width:100%;aspect-ratio:1/1;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+.hero-card .hname{padding:4px 3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;color:var(--muted2)}
+.hero-card.correct-card{border-color:rgba(64,217,160,.35)}
+.hero-card.wrong-card{border-color:rgba(232,85,85,.25);opacity:.65}
+.hero-card .tick{
+  position:absolute;top:4px;right:4px;
+  width:14px;height:14px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;
+}
+.hero-card.correct-card .tick{background:var(--green);color:#000}
+.hero-card.wrong-card .tick{background:var(--red);color:#fff}
+.replay-btn{
+  background:var(--accent);
+  border:none;border-radius:10px;color:#fff;
+  font-family:inherit;font-size:15px;font-weight:700;padding:14px 40px;
+  cursor:pointer;transition:background .18s,transform .12s;
+  min-height:48px;
+}
+.replay-btn:hover{background:#4a8be0;transform:translateY(-1px)}
+
+/* ── TOAST ── */
+.toast-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);
+  z-index:99999;display:none;align-items:center;justify-content:center;
+  padding:20px;
+}
+.toast-overlay.show{display:flex;animation:fadeIn .2s}
+.toast-box{
+  background:var(--card);border:1px solid var(--border2);border-radius:16px;
+  padding:24px 24px;max-width:360px;width:100%;text-align:center;
+  box-shadow:0 16px 48px rgba(0,0,0,.7);
+  animation:slideUp .3s cubic-bezier(.25,.46,.45,.94);
+}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.toast-title{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text)}
+.toast-msg{font-size:13px;color:var(--muted2);margin-bottom:18px;line-height:1.7}
+.toast-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.toast-btn{
+  border:none;border-radius:9px;padding:12px 20px;
+  font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;
+  min-height:44px;
+}
+.toast-btn.primary{background:var(--accent);color:#fff}
+.toast-btn.primary:hover{background:#4a8be0}
+.toast-btn.danger{background:var(--red);color:#fff}
+.toast-btn.danger:hover{background:#d04444}
+.toast-btn.secondary{background:var(--surface);border:1px solid var(--border2);color:var(--muted2)}
+.toast-btn.secondary:hover{border-color:var(--accent);color:var(--text)}
+
+/* ── COMBO POPUP ── */
+.combo-popup{
+  position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);
+  z-index:99998;pointer-events:none;
+  font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;
+  color:var(--gold);letter-spacing:.03em;
+  animation:comboPop .75s ease forwards;opacity:0;
+}
+@keyframes comboPop{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.8)}
+  20%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}
+  70%{opacity:1;transform:translate(-50%,-55%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-65%) scale(.95)}
+}
+
+/* ── ANIMATIONS ── */
+@keyframes correctPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+@keyframes confetti{
+  0%{transform:translateY(0) rotate(0deg) scale(1);opacity:1}
+  100%{transform:translateY(100vh) rotate(720deg) scale(.5);opacity:0}
+}
+.img-wrapper.correct-anim{animation:correctPulse .5s ease}
+.img-wrapper.wrong-anim{animation:wrongShake .4s ease}
+.confetti-piece{
+  position:fixed;width:8px;height:8px;
+  animation:confetti 3s ease-in forwards;z-index:99997;pointer-events:none;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  #app{padding:0 12px 48px}
+  header{padding:20px 0 16px}
+  header .logo{font-size:clamp(20px,6vw,32px)}
+  header .sub{font-size:11px}
   
-  .hint-info{
-    display:flex;
-    flex-direction:row;
-    flex-wrap:wrap;
-    gap:8px 20px;
-    margin-bottom:12px;
-    font-size:13px;
-    justify-content:center;
-    align-items:center;
-  }
-  .hint-info-item{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    background:rgba(0,0,0,.15);
-    border:1px solid var(--border);
-    border-radius:6px;
-    padding:4px 10px;
-  }
-  .hint-info-label{color:var(--muted);font-weight:600}
-  .hint-info-value{color:var(--gold);font-weight:600}
-  .hint-info-value.hidden{color:var(--muted);font-style:italic;font-weight:400}
-  .hint-buttons{
-    display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
-  }
-  .hint-btn{
-    background:rgba(240,192,64,.1);border:1px solid rgba(240,192,64,.3);
-    color:var(--gold);border-radius:6px;padding:8px 14px;
-    font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;
-    transition:all .15s;
-  }
-  .hint-btn:hover{background:rgba(240,192,64,.2);border-color:var(--gold)}
-  .hint-btn:disabled{opacity:.4;cursor:not-allowed}
-  .hint-btn.used{background:rgba(122,130,160,.1);border-color:var(--border);color:var(--muted)}
-
-  .answer-zone{margin-top:18px}
-  .input-wrap{
-    position:relative;
-    display:flex;
-    align-items:stretch;
-    background:var(--card);
-    border:1.5px solid var(--border);
-    border-radius:12px;
-    overflow:hidden;
-    transition:border-color .2s, box-shadow .2s;
-  }
-  .input-wrap:focus-within{
-    border-color:var(--accent);
-    box-shadow:0 0 0 3px var(--glow);
-  }
-  .input-wrap.invalid{
-    border-color:var(--orange);
-    box-shadow:0 0 0 3px rgba(240,140,64,.3);
-    animation:shakeInput .4s ease;
-  }
-  @keyframes shakeInput{
-    0%,100%{transform:translateX(0)}
-    25%{transform:translateX(-6px)}
-    75%{transform:translateX(6px)}
-  }
-  .input-wrap.disabled-wrap{opacity:.5;pointer-events:none}
-  .input-wrap input{
-    flex:1;
-    background:none;
-    border:none;
-    outline:none;
-    color:var(--text);
-    font-family:inherit;
-    font-size:17px;
-    padding:16px 20px;
-    min-width:0;
-  }
-  .input-wrap input::placeholder{color:var(--muted)}
-  .submit-btn{
-    background:linear-gradient(135deg,var(--accent),#6a9ff7);
-    border:none;
-    color:#fff;
-    font-family:inherit;
-    font-weight:700;
-    font-size:15px;
-    letter-spacing:.05em;
-    padding:0 28px;
-    min-width:110px;
-    cursor:pointer;
-    transition:all .2s;
-    box-shadow:inset 0 0 0 0 rgba(255,255,255,.1);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .submit-btn:hover{
-    background:linear-gradient(135deg,#3a7de8,var(--accent));
-    box-shadow:inset 0 0 20px rgba(255,255,255,.15);
-  }
-  .submit-btn:active{
-    transform:scale(.98);
-  }
-  .submit-btn:disabled{
-    opacity:.5;
-    cursor:not-allowed;
-  }
+  .howto{grid-template-columns:repeat(2,1fr);gap:8px}
+  .howto-step{padding:12px 10px}
+  .howto-step .icon{font-size:22px}
+  .howto-step .step-title{font-size:11px}
+  .howto-step .step-desc{font-size:10px}
   
-  #suggestions{
-    background:var(--card);border:1px solid var(--border);
-    border-radius:0 0 8px 8px;margin-top:-2px;
-    max-height:350px;overflow-y:auto;display:none;
-  }
-  .sug-item{padding:10px 16px;font-size:14px;cursor:pointer;transition:background .1s}
-  .sug-item:hover{background:rgba(79,142,247,.15);color:var(--accent)}
-  .sug-item em{color:var(--accent);font-style:normal}
-  .feedback{
-    text-align:center;padding:14px;border-radius:8px;
-    margin-top:12px;font-size:15px;font-weight:600;
-    opacity:0;transition:opacity .25s;
-  }
-  .feedback.show{opacity:1}
-  .feedback.wrong{background:rgba(224,85,85,.12);color:var(--red);border:1px solid rgba(224,85,85,.3)}
-  .feedback.correct{background:rgba(62,207,142,.12);color:var(--green);border:1px solid rgba(62,207,142,.3)}
-  .feedback.invalid{background:rgba(240,140,64,.12);color:var(--orange);border:1px solid rgba(240,140,64,.3)}
-  .wrong-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:20px}
-  .wrong-tag{
-    background:rgba(224,85,85,.1);border:1px solid rgba(224,85,85,.25);
-    color:var(--red);border-radius:4px;padding:3px 8px;font-size:12px;
-    text-decoration:line-through;
-  }
+  .section-card{padding:14px 14px}
+  .count-grid{grid-template-columns:repeat(5,1fr);gap:6px}
+  .count-btn{padding:12px 0;font-size:15px;min-height:44px}
+  
+  .filter-type-btn{font-size:12px;padding:10px 6px;min-height:44px}
+  .filter-val-btn{padding:10px 12px;font-size:12px;min-height:44px}
+  
+  .game-topbar{padding:10px 0 14px;gap:6px}
+  .score-value{font-size:22px}
+  .streak-pill{padding:4px 8px;font-size:11px}
+  .top-right{gap:5px}
+  .icon-btn{width:38px;height:38px;font-size:13px}
+  .danger-btn{height:38px;padding:0 10px;font-size:11px}
+  .skip-btn{padding:8px 10px;font-size:11px;min-height:38px}
+  
+  .attempt-bar{padding:8px 12px;margin-bottom:12px}
+  .attempt-bar-label{font-size:10px}
+  .dot{width:14px;height:6px}
+  .dot.correct{width:20px}
+  .attempt-count{font-size:11px}
+  
+  .img-area{gap:14px;margin-bottom:14px}
+  .img-wrapper{border-radius:14px;max-width:320px}
+  
+  .hint-panel{padding:14px;gap:10px}
+  .hangman-display{font-size:clamp(16px,4.5vw,24px);letter-spacing:.25em;padding:8px;min-height:32px}
+  .hm-char{min-width:18px;height:26px}
+  .hm-hidden{min-width:18px;height:26px;font-size:14px}
+  .hm-space{min-width:10px;height:26px}
+  
+  .hint-info-row{gap:6px}
+  .hint-info-box{padding:8px 10px}
+  .hint-info-label{font-size:9px}
+  .hint-info-value{font-size:12px}
+  .hint-info-value.hidden{font-size:10px}
+  
+  .hint-btn{padding:10px 12px;font-size:11px;min-height:44px}
+  .hint-btn-img{width:20px;height:20px}
+  .hint-btn-cost{font-size:9px;padding:2px 6px}
+  
+  .input-wrap input{padding:12px 14px;font-size:15px}
+  .submit-btn{padding:0 16px;min-width:70px;font-size:13px}
+  
+  .sug-item{padding:12px 14px;font-size:13px;min-height:44px}
+  
+  .reveal-banner{padding:12px 14px;margin-bottom:14px}
+  .reveal-hero-name{font-size:18px}
+  .meta-label{font-size:9px;min-width:40px}
+  .meta-tag{padding:3px 7px;font-size:10px}
+  .next-btn{padding:10px 16px;font-size:13px;min-height:42px}
+  
+  .flt-row{grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px}
+  .flt-btn{padding:10px 6px;font-size:11px;min-height:44px}
+  
+  .result-hero{padding:18px 16px}
+  .result-score-ring{width:70px;height:70px}
+  .result-score-ring .big{font-size:24px}
+  .result-title{font-size:22px}
+  .result-sub{font-size:12px}
+  .result-stats{gap:6px;margin-top:12px}
+  .stat-box{padding:8px 6px}
+  .stat-box .stat-val{font-size:16px}
+  .stat-box .stat-label{font-size:8px}
+  
+  .hint-stats-box{padding:16px}
+  .hint-stats-title{font-size:10px}
+  .hint-stats-total{font-size:36px}
+  .hint-stats-breakdown{gap:6px}
+  .hint-stat-item{padding:8px 6px}
+  .hint-stat-item .hs-val{font-size:20px}
+  .hint-stat-item .hs-label{font-size:8px}
+  .hint-stat-item .hs-icon{width:20px;height:20px;font-size:16px}
+  .hint-stats-penalty-text{font-size:12px}
+  .hint-stats-penalty-value{font-size:16px}
+  
+  .hero-grid{grid-template-columns:repeat(auto-fill,minmax(65px,1fr));gap:5px}
+  .hero-card .hname{padding:3px 2px;font-size:8px}
+  .hero-card .tick{width:12px;height:12px;font-size:7px;top:3px;right:3px}
+  
+  .toast-box{padding:20px 18px}
+  .toast-title{font-size:15px}
+  .toast-msg{font-size:12px}
+  .toast-btn{padding:11px 18px;font-size:13px;min-height:42px}
+  
+  .combo-popup{font-size:32px}
+}
 
-  .reveal-banner{
-    display:none;
-    background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.3);
-    border-radius:10px;padding:14px 20px;margin-top:14px;
-    align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
-  }
-  .reveal-banner .hero-name{font-size:22px;font-weight:700;color:var(--accent)}
-  .reveal-banner .hero-meta{font-size:12px;color:var(--muted);margin-top:3px}
-  .next-btn{
-    background:var(--accent);border:none;border-radius:8px;
-    color:#fff;font-family:inherit;font-weight:700;font-size:14px;
-    padding:10px 22px;cursor:pointer;transition:background .15s,transform .1s;
-  }
-  .next-btn:hover{background:#3a7de8;transform:translateY(-1px)}
-
-  #result{display:none;flex-direction:column;align-items:center;gap:20px;padding-top:20px}
-  .result-circle{
-    width:120px;height:120px;border-radius:50%;
-    border:3px solid var(--gold);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:rgba(240,192,64,.06);box-shadow:0 0 40px rgba(240,192,64,.2);
-  }
-  .result-circle .big{font-size:40px;font-weight:700;color:var(--gold);font-family:inherit}
-  .result-circle .small{font-size:12px;color:var(--muted);font-family:inherit}
-  .result-title{font-family:inherit;font-size:28px;font-weight:700;letter-spacing:.05em}
-  .result-sub{color:var(--muted);font-size:14px;text-align:center;font-family:inherit}
-  .hero-grid{
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
-    gap:10px;width:100%;max-width:700px;
-  }
-  .hero-card{
-    background:var(--card);border-radius:8px;overflow:hidden;
-    border:1px solid var(--border);text-align:center;font-size:11px;position:relative;
-    font-family:inherit;transition:transform .2s;
-  }
-  .hero-card:hover{transform:translateY(-4px)}
-  .hero-card img{width:100%;aspect-ratio:1/1;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
-  .hero-card .hname{padding:5px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:inherit}
-  .hero-card.correct-card{border-color:rgba(62,207,142,.4)}
-  .hero-card.wrong-card{border-color:rgba(224,85,85,.35);opacity:.7}
-  .hero-card .tick{
-    position:absolute;top:4px;right:4px;
-    width:18px;height:18px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;font-size:10px;
-  }
-  .hero-card.correct-card .tick{background:var(--green);color:#fff}
-  .hero-card.wrong-card .tick{background:var(--red);color:#fff}
-  .replay-btn{
-    background:linear-gradient(135deg,#4f8ef7,#7c3aed);border:none;border-radius:10px;
-    color:#fff;font-family:inherit;font-size:16px;font-weight:700;padding:14px 40px;
-    cursor:pointer;box-shadow:0 4px 20px rgba(79,142,247,.35);transition:opacity .15s;
-  }
-  .replay-btn:hover{opacity:.85}
-
-  .toast-overlay{
-    position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
-    z-index:10000;display:none;align-items:center;justify-content:center;
-    animation:fadeIn .2s;
-  }
-  .toast-overlay.show{display:flex}
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-  .toast-box{
-    background:var(--card);border:1px solid var(--border);border-radius:12px;
-    padding:24px 32px;max-width:400px;text-align:center;
-    box-shadow:0 10px 40px rgba(0,0,0,.6);
-    animation:slideUp .3s cubic-bezier(.25,.46,.45,.94);
-  }
-  @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-  .toast-title{font-size:18px;font-weight:700;margin-bottom:8px;color:var(--text)}
-  .toast-msg{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6}
-  .toast-actions{display:flex;gap:10px;justify-content:center}
-  .toast-btn{
-    border:none;border-radius:8px;padding:10px 24px;
-    font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;
-    transition:all .15s;
-  }
-  .toast-btn.primary{background:var(--accent);color:#fff}
-  .toast-btn.primary:hover{background:#3a7de8}
-  .toast-btn.danger{background:var(--red);color:#fff}
-  .toast-btn.danger:hover{background:#c84444}
-  .toast-btn.secondary{background:var(--surface);border:1px solid var(--border);color:var(--muted)}
-  .toast-btn.secondary:hover{border-color:var(--accent);color:var(--text)}
-
-  @keyframes correctPulse{
-    0%,100%{transform:scale(1)}
-    50%{transform:scale(1.05)}
-  }
-  @keyframes wrongShake{
-    0%,100%{transform:translateX(0)}
-    25%{transform:translateX(-10px)}
-    75%{transform:translateX(10px)}
-  }
-  @keyframes confetti{
-    0%{transform:translateY(0) rotate(0deg);opacity:1}
-    100%{transform:translateY(100vh) rotate(720deg);opacity:0}
-  }
-  .img-wrapper.correct{animation:correctPulse .5s ease}
-  .img-wrapper.wrong{animation:wrongShake .5s ease}
-  .confetti-piece{
-    position:fixed;
-    width:10px;
-    height:10px;
-    background:var(--gold);
-    animation:confetti 3s ease-in forwards;
-    z-index:99998;
-    pointer-events:none;
-  }
-
-  ::-webkit-scrollbar{width:4px}
-  ::-webkit-scrollbar-track{background:var(--surface)}
-  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-  @media(max-width:480px){
-    .img-wrapper{max-width:100%}
-    .hero-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr))}
-    .flt-row{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
-    .hangman-display{font-size:24px;letter-spacing:.35em}
-    .hm-char,.hm-hidden{width:22px;height:30px}
-    .hm-space{width:10px;height:30px}
-    .submit-btn{padding:0 20px;min-width:90px;font-size:14px}
-    .hint-info{gap:6px 12px;font-size:12px}
-  }
+@media(max-width:380px){
+  .count-grid{grid-template-columns:repeat(3,1fr)}
+  .howto{grid-template-columns:1fr}
+  .hero-grid{grid-template-columns:repeat(auto-fill,minmax(60px,1fr))}
+  .flt-row{grid-template-columns:repeat(2,1fr)}
+}
 </style>
 </head>
 <body>
 <div id="app">
   <header>
-    <div class="logo">ROV HERO QUIZ</div>
-    <div class="sub">ทายชื่อตัวละครจากรูปภาพที่ซูมเข้า</div>
+    <div class="logo">ROV <span>HERO</span> QUIZ</div>
+    <div class="sub">ทายชื่อฮีโร่จากรูปซูม</div>
+    <div class="header-divider"></div>
   </header>
 
   <div id="loading">
     <div class="spinner"></div>
-    <div style="color:var(--muted);font-size:14px">กำลังโหลดข้อมูล...</div>
+    <div style="color:var(--muted2);font-size:14px">กำลังโหลดข้อมูล...</div>
   </div>
 
   <section id="setup">
-    <div style="display:flex;justify-content:flex-end;margin-bottom:12px;"><button id="setup-settings-btn" class="settings-btn">⚙</button></div>
-    <div>
-      <div class="section-label">จำนวนตัวละคร</div>
+    <div class="howto">
+      <div class="howto-step">
+        <span class="icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+        <div class="step-title">ดูรูปซูม</div>
+        <div class="step-desc">รูปจะค่อยๆ ซูมออกทุกครั้งที่ตอบผิด</div>
+      </div>
+      <div class="howto-step">
+        <span class="icon"><i class="fa-solid fa-comment"></i></span>
+        <div class="step-title">พิมพ์ชื่อ</div>
+        <div class="step-desc">พิมพ์ชื่อฮีโร่ที่คิดว่าใช่ แล้วกดยืนยัน</div>
+      </div>
+      <div class="howto-step">
+        <span class="icon"><i class="fa-solid fa-lightbulb"></i></span>
+        <div class="step-title">ใช้คำใบ้</div>
+        <div class="step-desc">ขอดูตำแหน่ง เลน หรือสุ่มตัวอักษร แต่หักคะแนน</div>
+      </div>
+      <div class="howto-step">
+        <span class="icon"><i class="fa-solid fa-fire"></i></span>
+        <div class="step-title">สะสม Streak</div>
+        <div class="step-desc">ตอบถูกติดต่อกันได้โบนัสพิเศษ</div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-bottom:-8px">
+      <button id="setup-settings-btn" class="icon-btn" title="ฟิลเตอร์รูป"><i class="fa-solid fa-gear"></i></button>
+    </div>
+
+    <div class="section-card">
+      <div class="section-card-title">จำนวนตัวละคร</div>
       <div class="count-grid">
         <button class="count-btn" data-n="10">10</button>
         <button class="count-btn active" data-n="20">20</button>
@@ -693,119 +986,177 @@
         <button class="count-btn" data-n="all">ทั้งหมด</button>
       </div>
     </div>
-    <div>
-      <div class="section-label">กรองตัวละคร</div>
-      <div style="display:flex;flex-direction:column;gap:16px">
-        <div class="tab-row" id="filter-type-row">
-          <button class="filter-type-btn active" data-ft="all">สุ่มทั้งหมด</button>
-          <button class="filter-type-btn" data-ft="role">เฉพาะตำแหน่ง</button>
-          <button class="filter-type-btn" data-ft="lane">เฉพาะเลน</button>
-        </div>
-        <div>
-          <div class="filter-values-header" id="filter-values-header" style="display:none">
-            <span>เลือกได้หลายรายการ:</span>
-            <span class="filter-count-badge" id="filter-count-badge">0 เลือก</span>
-            <button class="filter-clear-btn" id="filter-clear-btn">ล้างทั้งหมด</button>
-          </div>
-          <div class="tab-row" id="filter-values"></div>
-        </div>
+
+    <div class="section-card">
+      <div class="section-card-title">กรองตัวละคร</div>
+      <div class="filter-type-tabs">
+        <button class="filter-type-btn active" data-ft="all"><i class="fa-solid fa-dice tab-icon-fa"></i> สุ่มทั้งหมด</button>
+        <button class="filter-type-btn" data-ft="role"><img src="images/role_icons/Fighter_Role_icon.png" class="tab-icon" alt=""> ตำแหน่ง</button>
+        <button class="filter-type-btn" data-ft="lane"><img src="images/lane_icons/Middle_Icon.png" class="tab-icon" alt=""> เลน</button>
       </div>
+      <div class="filter-values-header" id="filter-values-header" style="display:none">
+        <span>เลือกได้หลายอัน</span>
+        <span class="filter-count-badge" id="filter-count-badge">0 เลือก</span>
+        <button class="filter-clear-btn" id="filter-clear-btn">ล้าง</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px" id="filter-values"></div>
     </div>
-    <button class="start-btn" id="start-btn">เริ่มเกม</button>
+
+    <button class="start-btn" id="start-btn"><i class="fa-solid fa-gamepad"></i> เริ่มเกม</button>
   </section>
 
   <section id="game">
     <div class="game-topbar">
-      <div class="score-pill">คะแนน <span id="score-display">0</span></div>
-      <div class="progress-pill" id="prog-text">0 / 0</div>
-      <div class="top-right-btns">
-        <button id="settings-btn" class="settings-btn">⚙</button>
-        <button id="end-game-btn" class="end-game-btn">จบเกม</button>
-        <button id="reveal-hint-btn">เฉลย</button>
-        <button class="skip-btn" id="skip-btn">ข้าม</button>
+      <div class="score-display">
+        <div class="score-label">คะแนน</div>
+        <div class="score-value" id="score-display">0</div>
+      </div>
+      <div class="streak-pill" id="streak-pill">
+        <span class="streak-icon"><i class="fa-solid fa-fire"></i></span>
+        <span id="streak-count">0</span> streak
+      </div>
+      <div class="top-right">
+        <button id="settings-btn" class="icon-btn" title="ฟิลเตอร์รูป"><i class="fa-solid fa-gear"></i></button>
+        <button id="reveal-hint-btn"><i class="fa-solid fa-skull"></i> เฉลย</button>
+        <button class="skip-btn" id="skip-btn">ข้าม <i class="fa-solid fa-arrow-right"></i></button>
+        <button id="end-game-btn" class="danger-btn">จบเกม</button>
       </div>
     </div>
-    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-fill" style="width:0%"></div></div>
 
-    <div class="attempt-dots" id="attempt-dots"></div>
-
-    <div class="img-wrapper" id="img-wrapper">
-      <img id="hero-img" src="" alt="hero">
-      <canvas id="pixel-canvas"></canvas>
-      <div class="img-overlay"></div>
-      <div class="img-filter-indicator" id="img-filter-indicator"></div>
-      <div class="hint-badge" id="hint-badge">0 / 10 ครั้ง</div>
+    <div class="prog-wrap">
+      <div class="prog-labels">
+        <span class="prog-q" id="prog-text">0 / 0</span>
+        <span id="prog-pct">0%</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
     </div>
 
-    <div class="hints-section" id="hints-section">
-      <div class="hangman-display" id="hangman-display"></div>
-      <div class="hint-info">
-        <div class="hint-info-item">
-          <span class="hint-info-label">ตำแหน่ง:</span>
-          <span class="hint-info-value hidden" id="hint-role">กดเพื่อดู</span>
-        </div>
-        <div class="hint-info-item">
-          <span class="hint-info-label">เลน:</span>
-          <span class="hint-info-value hidden" id="hint-lane">กดเพื่อดู</span>
+    <div class="attempt-bar">
+      <span class="attempt-bar-label">พยายาม</span>
+      <div class="attempt-dots" id="attempt-dots"></div>
+      <span class="attempt-count" id="attempt-count">0/10</span>
+    </div>
+
+    <div class="img-area">
+      <div class="img-wrapper" id="img-wrapper">
+        <img id="hero-img" src="" alt="hero">
+        <canvas id="pixel-canvas"></canvas>
+        <div class="img-overlay"></div>
+        <div class="img-filter-indicator" id="img-filter-indicator"></div>
+        <div class="zoom-badge" id="zoom-badge">
+          <span class="zoom-badge-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <span id="hint-badge">0 / 10</span>
         </div>
       </div>
-      <div class="hint-buttons">
-        <button class="hint-btn" id="hint-btn-role">ดูตำแหน่ง (-1)</button>
-        <button class="hint-btn" id="hint-btn-lane">ดูเลน (-1)</button>
-        <button class="hint-btn" id="hint-btn-letter">สุ่มตัวอักษร (-2)</button>
+
+      <div class="hint-panel">
+        <div class="hint-panel-title"><i class="fa-solid fa-lightbulb"></i> คำใบ้</div>
+        <div class="hangman-display" id="hangman-display"></div>
+        <div class="hint-info-row">
+          <div class="hint-info-box">
+            <div class="hint-info-label">ตำแหน่ง</div>
+            <div class="hint-info-value hidden" id="hint-role">?</div>
+          </div>
+          <div class="hint-info-box">
+            <div class="hint-info-label">เลน</div>
+            <div class="hint-info-value hidden" id="hint-lane">?</div>
+          </div>
+        </div>
+        <div class="hint-buttons">
+          <button class="hint-btn" id="hint-btn-role">
+            <img class="hint-btn-img" src="images/role_icons/Fighter_Role_icon.png" alt="role">
+            <span>ดูตำแหน่ง</span>
+            <span class="hint-btn-cost">-1 คะแนน</span>
+          </button>
+          <button class="hint-btn" id="hint-btn-lane">
+            <img class="hint-btn-img" src="images/lane_icons/Middle_Icon.png" alt="lane">
+            <span>ดูเลน</span>
+            <span class="hint-btn-cost">-1 คะแนน</span>
+          </button>
+          <button class="hint-btn" id="hint-btn-letter">
+            <span class="hint-btn-icon"><i class="fa-solid fa-font"></i></span>
+            <span>สุ่มตัวอักษร</span>
+            <span class="hint-btn-cost">-2 คะแนน</span>
+          </button>
+        </div>
       </div>
+    </div>
+
+    <div class="reveal-banner" id="reveal-banner">
+      <div>
+        <div class="reveal-hero-name" id="reveal-name"></div>
+        <div class="reveal-hero-meta" id="reveal-meta"></div>
+      </div>
+      <button class="next-btn" id="next-btn">ถัดไป <i class="fa-solid fa-arrow-right"></i></button>
     </div>
 
     <div class="answer-zone">
       <div class="input-wrap" id="input-wrap">
-        <input type="text" id="guess-input" placeholder="พิมพ์ชื่อตัวละคร..." autocomplete="off" spellcheck="false">
+        <input type="text" id="guess-input" placeholder="พิมพ์ชื่อฮีโร่..." autocomplete="off" spellcheck="false">
         <button class="submit-btn" id="submit-btn">ยืนยัน</button>
       </div>
       <div id="suggestions"></div>
       <div class="wrong-list" id="wrong-list"></div>
       <div class="feedback" id="feedback"></div>
     </div>
-
-    <div class="reveal-banner" id="reveal-banner">
-      <div>
-        <div class="hero-name" id="reveal-name"></div>
-        <div class="hero-meta" id="reveal-meta"></div>
-      </div>
-      <button class="next-btn" id="next-btn">ถัดไป</button>
-    </div>
   </section>
 
   <section id="result">
-    <div class="result-circle">
-      <div class="big" id="res-score">0</div>
-      <div class="small">คะแนน</div>
+    <div class="result-hero">
+      <div class="result-score-ring">
+        <div class="big" id="res-score">0</div>
+        <div class="small">คะแนน</div>
+      </div>
+      <div class="result-title" id="res-title">จบแล้ว!</div>
+      <div class="result-sub" id="res-sub"></div>
+      <div class="result-stats" id="res-stats">
+        <div class="stat-box">
+          <div class="stat-val" id="res-correct">0</div>
+          <div class="stat-label">ถูก</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="res-wrong">0</div>
+          <div class="stat-label">ผิด</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="res-streak">0</div>
+          <div class="stat-label">Streak สูงสุด</div>
+        </div>
+      </div>
     </div>
-    <div class="result-title" id="res-title">จบแล้ว!</div>
-    <div class="result-sub" id="res-sub"></div>
+
+    <div class="hint-stats-box" id="hint-stats-box">
+      <div class="hint-stats-title"><i class="fa-solid fa-lightbulb"></i> สรุปการใช้คำใบ้</div>
+      <div id="hint-stats-content"></div>
+    </div>
+
     <div class="hero-grid" id="result-grid"></div>
-    <button class="replay-btn" id="replay-btn">เล่นใหม่</button>
+    <button class="replay-btn" id="replay-btn"><i class="fa-solid fa-rotate-right"></i> เล่นใหม่</button>
   </section>
 
+  <!-- Filter Panel (bottom sheet) -->
+  <div class="filter-overlay" id="filter-overlay"></div>
   <div class="img-filter-panel" id="img-filter-panel">
+    <div class="filter-handle"></div>
     <div class="img-filter-header">
-      <div class="img-filter-title">ฟิลเตอร์รูป</div>
-      <button class="img-filter-close" id="img-filter-close">✕</button>
+      <div class="img-filter-title"><i class="fa-solid fa-sliders"></i> ฟิลเตอร์รูปภาพ</div>
+      <button class="img-filter-close" id="img-filter-close"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="img-filter-body">
-      <div class="img-filter-active-badges" id="filter-active-badges">
+      <div class="filter-active-badges" id="filter-active-badges">
         <span class="no-filter-text">ยังไม่ได้เลือกฟิลเตอร์</span>
       </div>
       <div class="flt-row">
-        <button class="flt-btn" data-filter="grayscale">ขาวดำ</button>
-        <button class="flt-btn" data-filter="invert">กลับสี</button>
-        <button class="flt-btn" data-filter="flip-h">กลับซ้าย-ขวา</button>
-        <button class="flt-btn" data-filter="flip-v">กลับบน-ล่าง</button>
-        <button class="flt-btn" data-filter="blur">เบลอ</button>
-        <button class="flt-btn" data-filter="pixel">Pixel</button>
-        <button class="flt-btn" data-filter="sepia">Sepia</button>
-        <button class="flt-btn" data-filter="hue">หมุนสี</button>
+        <button class="flt-btn" data-filter="grayscale"><i class="fa-solid fa-circle-half-stroke"></i> ขาวดำ</button>
+        <button class="flt-btn" data-filter="invert"><i class="fa-solid fa-droplet"></i> กลับสี</button>
+        <button class="flt-btn" data-filter="flip-h"><i class="fa-solid fa-left-right"></i> ซ้าย-ขวา</button>
+        <button class="flt-btn" data-filter="flip-v"><i class="fa-solid fa-up-down"></i> บน-ล่าง</button>
+        <button class="flt-btn" data-filter="blur"><i class="fa-solid fa-water"></i> เบลอ</button>
+        <button class="flt-btn" data-filter="pixel"><i class="fa-solid fa-table-cells"></i> Pixel</button>
+        <button class="flt-btn" data-filter="sepia"><i class="fa-solid fa-image"></i> Sepia</button>
+        <button class="flt-btn" data-filter="hue"><i class="fa-solid fa-palette"></i> หมุนสี</button>
       </div>
-      <button class="flt-clear-btn" id="flt-clear-btn">ล้างทั้งหมด</button>
+      <button class="flt-clear-btn" id="flt-clear-btn">ล้างฟิลเตอร์ทั้งหมด</button>
     </div>
   </div>
 </div>
@@ -819,17 +1170,17 @@
 </div>
 
 <script>
-// ---- CONSTANTS ----
 const MAX_ATTEMPTS = 10;
 const REVEAL_BTN_AFTER = 5;
-const ZOOM_START = 5;
+const ZOOM_START = 5;  // เพิ่มจาก 5 เป็น 7 เพื่อซูมใกล้ขึ้นตอนเริ่ม
 const ZOOM_END = 1;
 const BLUR_MIN = 0;
 const BLUR_MAX = 1.5;
 const PIXEL_SIZE_MIN = 1;
 const PIXEL_SIZE_MAX = 6;
+// ขยายวงสุ่มซูมครั้งแรก (ค่า 0.95 = ใกล้ขอบมาก แต่ยังเหลือ margin เล็กน้อย)
+const ZOOM_RANDOM_FACTOR = 0.9;
 
-// ---- STATE ----
 let allHeroes = [];
 let filterType = 'all';
 let filterValues = [];
@@ -838,6 +1189,8 @@ let queue = [];
 let current = null;
 let currentIdx = 0;
 let score = 0;
+let streak = 0;
+let maxStreak = 0;
 let wrongGuesses = [];
 let revealed = false;
 let sessionResults = [];
@@ -846,311 +1199,314 @@ let hintPenalty = 0;
 let audioCtx = null;
 let lastInputValue = '';
 let revealAnimId = null;
+let iconCache = {};
 
-// ---- AUDIO SYSTEM ----
-function initAudio(){
-  if(!audioCtx){
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+// สถิติการใช้คำใบ้ตลอดทั้งเกม
+let gameHintStats = {
+  role: 0,
+  lane: 0,
+  letter: 0,
+  total: 0
+};
+
+function recolorTealToGold(imgElement) {
+  return new Promise((resolve) => {
+    if (!imgElement.src) {
+      resolve();
+      return;
+    }
+    
+    if (iconCache[imgElement.src]) {
+      imgElement.src = iconCache[imgElement.src];
+      resolve();
+      return;
+    }
+    
+    if (!imgElement.naturalWidth) {
+      imgElement.onload = () => {
+        performRecolor(imgElement, resolve);
+      };
+      imgElement.onerror = () => resolve();
+      return;
+    }
+    
+    performRecolor(imgElement, resolve);
+  });
+}
+
+function performRecolor(imgElement, callback) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = imgElement.naturalWidth;
+  canvas.height = imgElement.naturalHeight;
+  ctx.drawImage(imgElement, 0, 0);
+  
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+  
+  const fromR = 10, fromG = 120, fromB = 136;
+  const toR = 251, toG = 211, toB = 102;
+  const tolerance = 35;
+  
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i], g = data[i+1], b = data[i+2];
+    const distance = Math.sqrt(
+      Math.pow(r - fromR, 2) + 
+      Math.pow(g - fromG, 2) + 
+      Math.pow(b - fromB, 2)
+    );
+    if (distance < tolerance) {
+      data[i] = toR;
+      data[i+1] = toG;
+      data[i+2] = toB;
+    }
   }
+  
+  ctx.putImageData(imageData, 0, 0);
+  const dataURL = canvas.toDataURL();
+  iconCache[imgElement.src] = dataURL;
+  imgElement.src = dataURL;
+  
+  if (callback) callback();
 }
 
-function playNote(freq, startTime, duration, volume=0.08, type='sine'){
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = type;
-  osc.frequency.value = freq;
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
+async function preloadIcons() {
+  const ROLE_ICONS = {
+    'Assassin': 'images/role_icons/Assassin_Role_icon.png',
+    'Carry': 'images/role_icons/Carry_Role_icon.png',
+    'Fighter': 'images/role_icons/Fighter_Role_icon.png',
+    'Mage': 'images/role_icons/Mage_Role_icon.png',
+    'Support': 'images/role_icons/Support_Icon.png',
+    'Tank': 'images/role_icons/Tank_Role_icon.png',
+  };
   
-  gain.gain.setValueAtTime(0, startTime);
-  gain.gain.linearRampToValueAtTime(volume, startTime + 0.015);
-  gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+  const LANE_ICONS = {
+    'Abyssal Dragon': 'images/lane_icons/Abyssal_Dragon_Lane_Icon.png',
+    'Dark Slayer': 'images/lane_icons/Dark_Slayer_Lane_Icon.png',
+    'Jungle': 'images/lane_icons/Jungle_Icon.png',
+    'Mid': 'images/lane_icons/Middle_Icon.png',
+    'Support': 'images/lane_icons/Support_Icon.png',
+  };
   
-  osc.start(startTime);
-  osc.stop(startTime + duration);
+  const allIcons = Object.values(ROLE_ICONS).concat(Object.values(LANE_ICONS));
+  
+  const promises = allIcons.map(src => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        recolorTealToGold(img).then(() => resolve());
+      };
+      img.onerror = () => resolve();
+    });
+  });
+  
+  await Promise.all(promises);
 }
 
+/* ─ AUDIO ─ */
+function initAudio(){if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();}
+function playNote(freq,startTime,duration,volume=0.07,type='sine'){
+  const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+  osc.type=type;osc.frequency.value=freq;osc.connect(gain);gain.connect(audioCtx.destination);
+  gain.gain.setValueAtTime(0,startTime);
+  gain.gain.linearRampToValueAtTime(volume,startTime+0.015);
+  gain.gain.exponentialRampToValueAtTime(0.001,startTime+duration);
+  osc.start(startTime);osc.stop(startTime+duration);
+}
 function playSound(type){
   try{
     if(!audioCtx) initAudio();
-    if(audioCtx.state === 'suspended') audioCtx.resume();
-    const now = audioCtx.currentTime;
-    
+    if(audioCtx.state==='suspended') audioCtx.resume();
+    const now=audioCtx.currentTime;
     switch(type){
-      case 'correct': {
-        const notes = [
-          {f:523.25, t:0},
-          {f:659.25, t:0.08},
-          {f:783.99, t:0.16},
-          {f:1046.5, t:0.24}
-        ];
-        notes.forEach(n => {
-          playNote(n.f, now + n.t, 0.35, 0.07, 'sine');
-        });
-        break;
-      }
-      case 'wrong': {
-        playNote(349.23, now, 0.18, 0.06, 'triangle');
-        playNote(261.63, now + 0.1, 0.22, 0.06, 'triangle');
-        break;
-      }
-      case 'click': {
-        playNote(1400, now, 0.04, 0.03, 'sine');
-        break;
-      }
-      case 'start': {
-        const notes = [
-          {f:392, t:0},
-          {f:523.25, t:0.1},
-          {f:659.25, t:0.2},
-          {f:783.99, t:0.3}
-        ];
-        notes.forEach(n => {
-          playNote(n.f, now + n.t, 0.3, 0.06, 'sine');
-        });
-        break;
-      }
-      case 'hint': {
-        playNote(880, now, 0.12, 0.05, 'sine');
-        playNote(1174.66, now + 0.08, 0.15, 0.05, 'sine');
-        break;
-      }
-      case 'reveal': {
-        const notes = [
-          {f:523.25, t:0},
-          {f:659.25, t:0.05},
-          {f:783.99, t:0.1},
-          {f:1046.5, t:0.15},
-          {f:1318.51, t:0.2}
-        ];
-        notes.forEach(n => {
-          playNote(n.f, now + n.t, 0.4, 0.05, 'sine');
-        });
-        break;
-      }
-      case 'type': {
-        const freq = 1200 + Math.random() * 400;
-        playNote(freq, now, 0.03, 0.025, 'sine');
-        break;
-      }
-      case 'delete': {
-        const freq = 600 + Math.random() * 200;
-        playNote(freq, now, 0.05, 0.02, 'sine');
-        break;
-      }
-      case 'select': {
-        playNote(1000, now, 0.05, 0.04, 'sine');
-        playNote(1500, now + 0.03, 0.05, 0.04, 'sine');
-        break;
-      }
-      case 'invalid': {
-        playNote(500, now, 0.1, 0.05, 'square');
-        playNote(400, now + 0.1, 0.15, 0.05, 'square');
-        break;
-      }
+      case'correct':[{f:523.25,t:0},{f:659.25,t:.08},{f:783.99,t:.16},{f:1046.5,t:.24}].forEach(n=>playNote(n.f,now+n.t,.35,.07));break;
+      case'wrong':playNote(349.23,now,.18,.06,'triangle');playNote(261.63,now+.1,.22,.06,'triangle');break;
+      case'click':playNote(1400,now,.04,.03);break;
+      case'start':[{f:392,t:0},{f:523.25,t:.1},{f:659.25,t:.2},{f:783.99,t:.3}].forEach(n=>playNote(n.f,now+n.t,.3,.06));break;
+      case'hint':playNote(880,now,.12,.05);playNote(1174.66,now+.08,.15,.05);break;
+      case'reveal':[{f:523.25,t:0},{f:659.25,t:.05},{f:783.99,t:.1},{f:1046.5,t:.15},{f:1318.51,t:.2}].forEach(n=>playNote(n.f,now+n.t,.4,.05));break;
+      case'type':playNote(1200+Math.random()*400,now,.03,.022);break;
+      case'delete':playNote(600+Math.random()*200,now,.05,.018);break;
+      case'select':playNote(1000,now,.05,.04);playNote(1500,now+.03,.05,.04);break;
+      case'invalid':playNote(500,now,.1,.05,'square');playNote(400,now+.1,.15,.05,'square');break;
+      case'combo':[{f:880,t:0},{f:1174.66,t:.06},{f:1567.98,t:.12}].forEach(n=>playNote(n.f,now+n.t,.3,.08));break;
     }
-  }catch(e){
-    console.warn('Audio error:', e);
-  }
+  }catch(e){console.warn('Audio:',e);}
 }
 
-// ---- ANIMATIONS ----
+/* ─ ANIMATIONS ─ */
 function animateImage(type){
-  const wrapper = document.getElementById('img-wrapper');
-  wrapper.classList.remove('correct','wrong');
-  void wrapper.offsetWidth;
-  wrapper.classList.add(type);
-  setTimeout(()=>wrapper.classList.remove(type),500);
+  const w=document.getElementById('img-wrapper');
+  w.classList.remove('correct-anim','wrong-anim');void w.offsetWidth;
+  w.classList.add(type+'-anim');
+  setTimeout(()=>w.classList.remove(type+'-anim'),500);
 }
-
 function createConfetti(){
-  const colors = ['#f0c040','#4f8ef7','#3ecf8e','#e05555','#a78bfa'];
-  for(let i=0;i<50;i++){
-    const piece = document.createElement('div');
-    piece.className = 'confetti-piece';
-    piece.style.left = Math.random()*100+'vw';
-    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
-    piece.style.animationDelay = Math.random()*2+'s';
-    piece.style.animationDuration = (2+Math.random()*2)+'s';
-    document.body.appendChild(piece);
-    setTimeout(()=>piece.remove(),5000);
+  const colors=['#f5c842','#5b9cf6','#40d9a0','#e85555','#b09cf8','#f09040'];
+  for(let i=0;i<60;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
+    p.style.cssText=`left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-delay:${Math.random()*2}s;animation-duration:${2+Math.random()*2}s;
+      width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;
+      border-radius:${Math.random()>.5?'50%':'2px'}`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),5000);
   }
 }
-
-function shakeInput(){
-  const wrap = document.getElementById('input-wrap');
-  wrap.classList.remove('invalid');
-  void wrap.offsetWidth;
-  wrap.classList.add('invalid');
-  setTimeout(()=>wrap.classList.remove('invalid'),500);
+function showComboPopup(text){
+  const el=document.createElement('div');
+  el.className='combo-popup';el.innerHTML=text;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),900);
+}
+function bumpScore(){
+  const el=document.getElementById('score-display');
+  el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');
 }
 
-// ---- TOAST SYSTEM ----
-function showToast(title, msg, actions){
-  const overlay = document.getElementById('toast-overlay');
-  document.getElementById('toast-title').textContent = title;
-  document.getElementById('toast-msg').textContent = msg;
-  const actionsDiv = document.getElementById('toast-actions');
-  actionsDiv.innerHTML = '';
+/* ─ TOAST ─ */
+function showToast(title,msg,actions){
+  const overlay=document.getElementById('toast-overlay');
+  document.getElementById('toast-title').textContent=title;
+  document.getElementById('toast-msg').textContent=msg;
+  const div=document.getElementById('toast-actions');div.innerHTML='';
   actions.forEach(act=>{
-    const btn = document.createElement('button');
-    btn.className = `toast-btn ${act.type||'secondary'}`;
-    btn.textContent = act.label;
-    btn.onclick = ()=>{
-      overlay.classList.remove('show');
-      if(act.onClick) act.onClick();
-      playSound('click');
-    };
-    actionsDiv.appendChild(btn);
+    const btn=document.createElement('button');
+    btn.className=`toast-btn ${act.type||'secondary'}`;btn.textContent=act.label;
+    btn.onclick=()=>{overlay.classList.remove('show');if(act.onClick)act.onClick();playSound('click');};
+    div.appendChild(btn);
   });
   overlay.classList.add('show');
 }
 
-// ---- LOAD DATA.JSON ----
+/* ─ LOAD DATA  */
 async function loadData(){
   try{
-    const r = await fetch('data.json');
+    const r=await fetch('data.json');
     if(!r.ok) throw new Error('HTTP '+r.status);
-    allHeroes = await r.json();
+    allHeroes=await r.json();
     initSetup();
-  } catch(err){
+  }catch(err){
     document.getElementById('loading').innerHTML=
-      `<div class="load-err">โหลด data.json ไม่สำเร็จ<br><small>${err.message}</small><br><br><small>ตรวจสอบว่าไฟล์ data.json อยู่ในโฟลเดอร์เดียวกับ index.html</small></div>`;
+      `<div class="load-err">โหลด data.json ไม่สำเร็จ<br><small>${err.message}</small><br><br>
+      <small>ตรวจสอบว่าไฟล์ data.json อยู่ในโฟลเดอร์เดียวกับ index.html</small></div>`;
   }
 }
 loadData();
 
-function initSetup(){
+async function initSetup(){
   document.getElementById('loading').style.display='none';
   document.getElementById('setup').style.display='flex';
+  await preloadIcons();
   renderFilterValues();
 }
 
-// ---- SETUP UI ----
+/* ─ SETUP UI ─ */
 document.querySelectorAll('.count-btn').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.count-btn').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
-  countSel = b.dataset.n==='all'?9999:parseInt(b.dataset.n);
+  countSel=b.dataset.n==='all'?9999:parseInt(b.dataset.n);
   playSound('click');
 }));
 
 document.querySelectorAll('.filter-type-btn').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.filter-type-btn').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
-  filterType = b.dataset.ft;
-  filterValues = [];
-  renderFilterValues();
-  playSound('click');
+  filterType=b.dataset.ft;filterValues=[];
+  renderFilterValues();playSound('click');
 }));
 
 function renderFilterValues(){
   const div=document.getElementById('filter-values');
   const header=document.getElementById('filter-values-header');
   div.innerHTML='';
-  
-  if(filterType==='all'){
-    header.style.display='none';
-    return;
-  }
-  
-  header.style.display='flex';
-  updateFilterCountBadge();
-  
+  if(filterType==='all'){header.style.display='none';return;}
+  header.style.display='flex';updateFilterCountBadge();
   const vals=filterType==='role'
     ?[...new Set(allHeroes.flatMap(h=>h.roles))].sort()
     :[...new Set(allHeroes.flatMap(h=>h.lane))].sort();
-    
+
+  const ROLE_ICONS={
+    'Assassin':'images/role_icons/Assassin_Role_icon.png',
+    'Carry':'images/role_icons/Carry_Role_icon.png',
+    'Fighter':'images/role_icons/Fighter_Role_icon.png',
+    'Mage':'images/role_icons/Mage_Role_icon.png',
+    'Support':'images/role_icons/Support_Icon.png',
+    'Tank':'images/role_icons/Tank_Role_icon.png',
+  };
+  const LANE_ICONS={
+    'Abyssal Dragon':'images/lane_icons/Abyssal_Dragon_Lane_Icon.png',
+    'Dark Slayer':'images/lane_icons/Dark_Slayer_Lane_Icon.png',
+    'Jungle':'images/lane_icons/Jungle_Icon.png',
+    'Mid':'images/lane_icons/Middle_Icon.png',
+    'Support':'images/lane_icons/Support_Icon.png',
+  };
+
   vals.forEach(v=>{
     const btn=document.createElement('button');
     btn.className='filter-val-btn'+(filterValues.includes(v)?' active':'');
-    btn.textContent=v;
+    const iconSrc=filterType==='role'
+      ?Object.entries(ROLE_ICONS).find(([k])=>v.toLowerCase().includes(k.toLowerCase()))?.[1]
+      :Object.entries(LANE_ICONS).find(([k])=>v.toLowerCase().includes(k.toLowerCase()))?.[1];
+    if(iconSrc){
+      const img=document.createElement('img');
+      img.src=iconSrc;img.alt='';img.className='filter-val-icon';
+      btn.appendChild(img);
+    }
+    const span=document.createElement('span');span.textContent=v;btn.appendChild(span);
     btn.addEventListener('click',()=>{
-      if(filterValues.includes(v)){
-        filterValues = filterValues.filter(x=>x!==v);
-        btn.classList.remove('active');
-      } else {
-        filterValues.push(v);
-        btn.classList.add('active');
-      }
-      updateFilterCountBadge();
-      playSound('click');
+      if(filterValues.includes(v)){filterValues=filterValues.filter(x=>x!==v);btn.classList.remove('active');}
+      else{filterValues.push(v);btn.classList.add('active');}
+      updateFilterCountBadge();playSound('click');
     });
     div.appendChild(btn);
   });
 }
-
 function updateFilterCountBadge(){
-  const badge = document.getElementById('filter-count-badge');
-  const clearBtn = document.getElementById('filter-clear-btn');
-  const count = filterValues.length;
-  badge.textContent = count === 0 ? '0 เลือก' : `${count} เลือก`;
-  clearBtn.disabled = count === 0;
+  const badge=document.getElementById('filter-count-badge');
+  const clearBtn=document.getElementById('filter-clear-btn');
+  badge.textContent=filterValues.length===0?'0 เลือก':`${filterValues.length} เลือก`;
+  clearBtn.disabled=filterValues.length===0;
 }
-
 document.getElementById('filter-clear-btn').addEventListener('click',()=>{
-  filterValues = [];
-  document.querySelectorAll('.filter-val-btn').forEach(b=>b.classList.remove('active'));
-  updateFilterCountBadge();
-  playSound('click');
+  filterValues=[];document.querySelectorAll('.filter-val-btn').forEach(b=>b.classList.remove('active'));
+  updateFilterCountBadge();playSound('click');
 });
-
 document.getElementById('start-btn').addEventListener('click',startGame);
 
-// ---- START GAME ----
+/* ─ START GAME ─ */
 function startGame(){
   let pool=allHeroes.slice();
-  
-  if(filterType==='role' && filterValues.length > 0){
-    pool = pool.filter(h => h.roles.some(r => filterValues.includes(r)));
-  }
-  if(filterType==='lane' && filterValues.length > 0){
-    pool = pool.filter(h => h.lane.some(l => filterValues.includes(l)));
-  }
-  
-  if(!pool.length){
-    showToast(
-      'ไม่พบตัวละคร',
-      'ไม่มีตัวละครในหมวดที่เลือก กรุณาเลือกใหม่',
-      [{label:'ตกลง', type:'primary'}]
-    );
-    return;
-  }
-  
+  if(filterType==='role'&&filterValues.length>0) pool=pool.filter(h=>h.roles.some(r=>filterValues.includes(r)));
+  if(filterType==='lane'&&filterValues.length>0) pool=pool.filter(h=>h.lane.some(l=>filterValues.includes(l)));
+  if(!pool.length){showToast('ไม่พบตัวละคร','ไม่มีตัวละครในหมวดที่เลือก กรุณาเลือกใหม่',[{label:'ตกลง',type:'primary'}]);return;}
   pool=pool.sort(()=>Math.random()-.5);
   const n=Math.min(countSel,pool.length);
-  queue=pool.slice(0,n);
-  currentIdx=0;score=0;sessionResults=[];
+  queue=pool.slice(0,n);currentIdx=0;score=0;streak=0;maxStreak=0;sessionResults=[];
+  // รีเซ็ตสถิติคำใบ้ตอนเริ่มเกมใหม่
+  gameHintStats = { role: 0, lane: 0, letter: 0, total: 0 };
   document.getElementById('setup').style.display='none';
   document.getElementById('result').style.display='none';
   document.getElementById('game').style.display='flex';
+  updateStreakDisplay();
   playSound('start');
   loadQuestion();
 }
 
-// ---- LOAD QUESTION ----
+/* ─ LOAD QUESTION ─ */
 function loadQuestion(){
   if(currentIdx>=queue.length){endGame();return;}
   current=queue[currentIdx];
-  wrongGuesses=[];
-  revealed=false;
-  revealedLetters.clear();
-  hintPenalty = 0;
-  lastInputValue = '';
-  
-  if(revealAnimId){
-    cancelAnimationFrame(revealAnimId);
-    revealAnimId = null;
-  }
-
-  const img = document.getElementById('hero-img');
-  if(img){
-    img._ix = null;
-    img._iy = null;
-  }
+  wrongGuesses=[];revealed=false;revealedLetters.clear();hintPenalty=0;lastInputValue='';
+  if(revealAnimId){cancelAnimationFrame(revealAnimId);revealAnimId=null;}
+  const img=document.getElementById('hero-img');if(img){img._ix=null;img._iy=null;}
 
   const total=queue.length;
+  const pct=Math.round((currentIdx/total)*100);
   document.getElementById('prog-text').textContent=`${currentIdx+1} / ${total}`;
-  document.getElementById('prog-fill').style.width=`${(currentIdx/total)*100}%`;
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-fill').style.width=`${pct}%`;
   document.getElementById('score-display').textContent=score;
   document.getElementById('wrong-list').innerHTML='';
   document.getElementById('feedback').className='feedback';
@@ -1162,127 +1518,107 @@ function loadQuestion(){
   document.getElementById('input-wrap').classList.remove('disabled-wrap');
   document.getElementById('reveal-banner').style.display='none';
   document.getElementById('reveal-hint-btn').style.display='none';
-  document.getElementById('hint-badge').textContent=`0 / ${MAX_ATTEMPTS} ครั้ง`;
-
-  document.getElementById('hint-role').textContent='กดเพื่อดู';
+  document.getElementById('hint-badge').textContent=`0 / ${MAX_ATTEMPTS}`;
+  document.getElementById('hint-role').textContent='?';
   document.getElementById('hint-role').classList.add('hidden');
-  document.getElementById('hint-lane').textContent='กดเพื่อดู';
+  document.getElementById('hint-lane').textContent='?';
   document.getElementById('hint-lane').classList.add('hidden');
-  
-  document.getElementById('hint-btn-role').disabled=false;
-  document.getElementById('hint-btn-role').classList.remove('used');
-  document.getElementById('hint-btn-role').textContent='ดูตำแหน่ง (-1)';
-  
-  document.getElementById('hint-btn-lane').disabled=false;
-  document.getElementById('hint-btn-lane').classList.remove('used');
-  document.getElementById('hint-btn-lane').textContent='ดูเลน (-1)';
-  
-  document.getElementById('hint-btn-letter').disabled=false;
-  document.getElementById('hint-btn-letter').classList.remove('used');
-  document.getElementById('hint-btn-letter').textContent='สุ่มตัวอักษร (-2)';
-  
+  ['role','lane','letter'].forEach(k=>{
+    const b=document.getElementById('hint-btn-'+k);
+    b.disabled=false;b.classList.remove('used');
+    if(k==='role') b.innerHTML='<img class="hint-btn-img" src="images/role_icons/Fighter_Role_icon.png" alt="role"><span>ดูตำแหน่ง</span><span class="hint-btn-cost">-1 คะแนน</span>';
+    else if(k==='lane') b.innerHTML='<img class="hint-btn-img" src="images/lane_icons/Middle_Icon.png" alt="lane"><span>ดูเลน</span><span class="hint-btn-cost">-1 คะแนน</span>';
+    else b.innerHTML='<span class="hint-btn-icon"><i class="fa-solid fa-font"></i></span><span>สุ่มตัวอักษร</span><span class="hint-btn-cost">-2 คะแนน</span>';
+  });
   updateHangmanDisplay();
-  renderDots(0, false);
+  renderDots(0,false);
 
-  loadImageAsBlob(current.skins[0].image, blob=>{
+  loadImageAsBlob(current.skins[0].image,blob=>{
     const img=document.getElementById('hero-img');
     if(img._blobUrl) URL.revokeObjectURL(img._blobUrl);
     img._blobUrl=blob;
-    img._flipX = (typeof activeFilters!=='undefined'&&activeFilters.has('flip-h'))?-1:1;
-    img._flipY = (typeof activeFilters!=='undefined'&&activeFilters.has('flip-v'))?-1:1;
-    img.onload = ()=>{
-      if(typeof applyImageFilters==='function') applyImageFilters();
-    };
+    img._flipX=(activeFilters.has('flip-h'))?-1:1;
+    img._flipY=(activeFilters.has('flip-v'))?-1:1;
+    img.onload=()=>{if(typeof applyImageFilters==='function') applyImageFilters();};
     img.src=blob;
   });
-
-  setZoom(ZOOM_START, true);
+  setZoom(ZOOM_START,true);
   document.getElementById('guess-input').focus();
 }
 
-function renderDots(usedCount, isCorrect){
+function renderDots(usedCount,isCorrect){
   const wrap=document.getElementById('attempt-dots');
   wrap.innerHTML='';
   for(let i=0;i<MAX_ATTEMPTS;i++){
-    const d=document.createElement('div');
-    d.className='dot';
-    if(isCorrect && i===usedCount-1) d.classList.add('correct');
+    const d=document.createElement('div');d.className='dot';
+    if(isCorrect&&i===usedCount-1) d.classList.add('correct');
     else if(i<usedCount) d.classList.add('used');
     wrap.appendChild(d);
   }
-  const lbl=document.createElement('span');
-  lbl.className='dot-label';
-  lbl.textContent=`${usedCount}/${MAX_ATTEMPTS}`;
-  wrap.appendChild(lbl);
+  document.getElementById('attempt-count').textContent=`${usedCount}/${MAX_ATTEMPTS}`;
 }
 
-function setZoom(scale, instant){
+function safeOffset(scale){
+  // ใช้ ZOOM_RANDOM_FACTOR เพื่อขยายวงสุ่มซูมครั้งแรกให้กว้างขึ้น
+  return scale>1?(1-1/scale)*50*ZOOM_RANDOM_FACTOR:0;
+}
+function setZoom(scale,instant){
   const img=document.getElementById('hero-img');
-  if(instant){ 
-    img._ix = (Math.random()-.5)*100;
-    img._iy = (Math.random()-.5)*100;
-  }
-  const ix=(img._ix!=null?img._ix:(img._ix=(Math.random()-.5)*100));
-  const iy=(img._iy!=null?img._iy:(img._iy=(Math.random()-.5)*100));
-  const factor=scale>1?(scale-1)/(ZOOM_START-1):0;
-  const fx=(img._flipX||1);
-  const fy=(img._flipY||1);
   if(instant){
-    img.style.transition='none';
-    setTimeout(()=>{ img.style.transition='transform 1s cubic-bezier(.25,.46,.45,.94)'; },30);
+    const m=safeOffset(scale);
+    img._ix=(Math.random()*2-1)*m;
+    img._iy=(Math.random()*2-1)*m;
   }
-  img.style.transform=`scale(${scale*fx}, ${scale*fy}) translate(${ix*factor}%,${iy*factor}%)`;
+  const m=safeOffset(scale);
+  const ix=Math.max(-m,Math.min(m,img._ix!=null?img._ix:0));
+  const iy=Math.max(-m,Math.min(m,img._iy!=null?img._iy:0));
+  img._ix=ix;img._iy=iy;
+  const fx=(img._flipX||1),fy=(img._flipY||1);
+  if(instant){img.style.transition='none';setTimeout(()=>{img.style.transition='transform 1s cubic-bezier(.25,.46,.45,.94)';},30);}
+  img.style.transform=`scale(${scale*fx},${scale*fy}) translate(${ix}%,${iy}%)`;
 }
-
 function updateZoom(){
   const steps=wrongGuesses.length;
-  const scale=Math.max(ZOOM_END, ZOOM_START - (ZOOM_START-ZOOM_END)*(steps/MAX_ATTEMPTS));
-  setZoom(scale, false);
-  document.getElementById('hint-badge').textContent=`${steps} / ${MAX_ATTEMPTS} ครั้ง`;
-  if(activeFilters && activeFilters.size > 0) applyImageFilters();
+  const scale=Math.max(ZOOM_END,ZOOM_START-(ZOOM_START-ZOOM_END)*(steps/MAX_ATTEMPTS));
+  setZoom(scale,false);
+  document.getElementById('hint-badge').textContent=`${steps} / ${MAX_ATTEMPTS}`;
+  if(activeFilters&&activeFilters.size>0) applyImageFilters();
+}
+function loadImageAsBlob(src,cb){
+  const req=new XMLHttpRequest();req.open('GET',src,true);req.responseType='blob';
+  req.onload=function(){cb(this.status===200?URL.createObjectURL(this.response):src);};
+  req.onerror=()=>cb(src);req.send();
 }
 
-function loadImageAsBlob(src, cb){
-  const req=new XMLHttpRequest();
-  req.open('GET',src,true);
-  req.responseType='blob';
-  req.onload=function(){
-    cb(this.status===200?URL.createObjectURL(this.response):src);
-  };
-  req.onerror=()=>cb(src);
-  req.send();
+/* ─ STREAK ─ */
+function updateStreakDisplay(){
+  const pill=document.getElementById('streak-pill');
+  document.getElementById('streak-count').textContent=streak;
+  if(streak>=2) pill.classList.add('active');
+  else pill.classList.remove('active');
 }
 
-// ---- GUESS ----
+/* ─ GUESS ─ */
 function norm(s){return s.trim().toLowerCase().replace(/['\s\-]/g,'');}
 
 document.getElementById('submit-btn').addEventListener('click',submitGuess);
-document.getElementById('guess-input').addEventListener('keydown',e=>{if(e.key==='Enter')submitGuess();});
+document.getElementById('guess-input').addEventListener('keydown',e=>{if(e.key==='Enter') submitGuess();});
 
 document.getElementById('guess-input').addEventListener('input',function(){
-  const currentValue = this.value;
-  if(currentValue.length !== lastInputValue.length){
-    if(currentValue.length > lastInputValue.length){
-      playSound('type');
-    } else if(currentValue.length < lastInputValue.length){
-      playSound('delete');
-    }
-    lastInputValue = currentValue;
-  }
-  
-  const v=currentValue.trim().toLowerCase();
+  const cur=this.value;
+  if(cur.length>lastInputValue.length) playSound('type');
+  else if(cur.length<lastInputValue.length) playSound('delete');
+  lastInputValue=cur;
+  const v=cur.trim().toLowerCase();
   const box=document.getElementById('suggestions');
   if(v.length<1){box.style.display='none';return;}
   const used=new Set(wrongGuesses.map(norm));
-  const matches=allHeroes
-    .filter(h=>norm(h.name).includes(norm(v))&&!used.has(norm(h.name)));
+  const matches=allHeroes.filter(h=>norm(h.name).includes(norm(v))&&!used.has(norm(h.name)));
   if(!matches.length){box.style.display='none';return;}
+  // แสดงผลทั้งหมด ไม่จำกัดจำนวน
   box.innerHTML=matches.map(h=>{
-    const lo=h.name.toLowerCase();
-    const i=lo.indexOf(v);
-    const hi=i>=0
-      ?h.name.slice(0,i)+'<em>'+h.name.slice(i,i+v.length)+'</em>'+h.name.slice(i+v.length)
-      :h.name;
+    const lo=h.name.toLowerCase(),i=lo.indexOf(v);
+    const hi=i>=0?h.name.slice(0,i)+'<em>'+h.name.slice(i,i+v.length)+'</em>'+h.name.slice(i+v.length):h.name;
     return `<div class="sug-item" data-name="${h.name}">${hi}</div>`;
   }).join('');
   box.style.display='block';
@@ -1296,212 +1632,136 @@ document.getElementById('guess-input').addEventListener('input',function(){
     });
   });
 });
-
 document.getElementById('guess-input').addEventListener('blur',()=>{
-  setTimeout(()=>{ document.getElementById('suggestions').style.display='none'; },150);
+  setTimeout(()=>{document.getElementById('suggestions').style.display='none';},150);
 });
 
+function escapeHtml(s){
+  const d=document.createElement('div');d.textContent=s;return d.innerHTML;
+}
 function submitGuess(){
   if(revealed) return;
   const input=document.getElementById('guess-input');
-  const val=input.value.trim();
-  if(!val) return;
-  input.value='';
-  lastInputValue = '';
+  const val=input.value.trim();if(!val) return;
+  const safeVal=escapeHtml(val);
+  const normalizedVal=norm(val);
+  const matchedHero=allHeroes.find(h=>norm(h.name)===normalizedVal);
+  if(!matchedHero){
+    showFeedback('invalid',`"${safeVal}" ไม่ใช่ชื่อตัวละครในระบบ`);
+    shakeInput();playSound('invalid');
+    input.value=val;input.focus();input.select();return;
+  }
+  if(wrongGuesses.map(norm).includes(normalizedVal)){
+    showFeedback('invalid',`"${safeVal}" เคยพิมพ์ไปแล้ว`);
+    shakeInput();playSound('invalid');input.focus();return;
+  }
+  input.value='';lastInputValue='';
   document.getElementById('suggestions').style.display='none';
 
-  const normalizedVal = norm(val);
-  const matchedHero = allHeroes.find(h => norm(h.name) === normalizedVal);
-  
-  if(!matchedHero){
-    showFeedback('invalid',`"${val}" ไม่ใช่ชื่อตัวละครในระบบ`);
-    shakeInput();
-    playSound('invalid');
-    input.value = val;
-    input.focus();
-    input.select();
-    return;
-  }
-  
-  if(wrongGuesses.map(norm).includes(normalizedVal)){
-    showFeedback('invalid',`"${val}" เคยพิมพ์ไปแล้ว`);
-    shakeInput();
-    playSound('invalid');
-    input.focus();
-    return;
-  }
-
-  if(normalizedVal === norm(current.name)){
-    const pts=Math.max(1, MAX_ATTEMPTS + 1 - wrongGuesses.length - hintPenalty);
+  if(normalizedVal===norm(current.name)){
+    const basePoints=Math.max(1,MAX_ATTEMPTS+1-wrongGuesses.length-hintPenalty);
+    const streakBonus=streak>=4?3:streak>=2?1:0;
+    const pts=basePoints+streakBonus;
     score+=pts;
     document.getElementById('score-display').textContent=score;
-    showFeedback('correct',`ถูกต้อง! +${pts} คะแนน`);
-    renderDots(wrongGuesses.length+1, true);
-    animateImage('correct');
-    playSound('correct');
+    bumpScore();
+    streak++;maxStreak=Math.max(maxStreak,streak);
+    updateStreakDisplay();
+    if(streak>=3) showComboPopup(`<i class="fa-solid fa-fire"></i> ${streak} ต่อ!`);
+    if(streakBonus>0) showFeedback('correct',`ถูกต้อง! +${basePoints} (+${streakBonus} streak bonus) = +${pts} <i class="fa-solid fa-fire"></i>`);
+    else showFeedback('correct',`ถูกต้อง! +${pts} คะแนน`);
+    renderDots(wrongGuesses.length+1,true);
+    animateImage('correct');playSound(streak>=3?'combo':'correct');
     revealAnswer(true);
-    sessionResults.push({hero:current,correct:true,wrongCount:wrongGuesses.length});
+    sessionResults.push({hero:current,correct:true,wrongCount:wrongGuesses.length,pts});
   } else {
-    wrongGuesses.push(val);
-    addWrongTag(val);
-    showFeedback('wrong',`"${val}" ไม่ใช่คำตอบที่ถูกต้อง`);
-    renderDots(wrongGuesses.length, false);
-    animateImage('wrong');
-    playSound('wrong');
+    wrongGuesses.push(val);addWrongTag(val);
+    showFeedback('wrong',`"${safeVal}" ไม่ใช่คำตอบ — ลองใหม่!`);
+    renderDots(wrongGuesses.length,false);
+    animateImage('wrong');playSound('wrong');
+    streak=0;updateStreakDisplay();
     updateZoom();
-
-    if(wrongGuesses.length>=REVEAL_BTN_AFTER){
-      document.getElementById('reveal-hint-btn').style.display='inline-flex';
-    }
-
+    if(wrongGuesses.length>=REVEAL_BTN_AFTER) document.getElementById('reveal-hint-btn').style.display='inline-flex';
     if(wrongGuesses.length>=MAX_ATTEMPTS){
-      sessionResults.push({hero:current,correct:false,wrongCount:wrongGuesses.length});
+      sessionResults.push({hero:current,correct:false,wrongCount:wrongGuesses.length,pts:0});
       revealAnswer(false);
     }
   }
 }
 
 function addWrongTag(name){
-  const tag=document.createElement('div');
-  tag.className='wrong-tag';
-  tag.textContent=name;
+  const tag=document.createElement('div');tag.className='wrong-tag';tag.textContent=name;
   document.getElementById('wrong-list').appendChild(tag);
 }
-
 function showFeedback(type,msg){
-  const el=document.getElementById('feedback');
-  el.className=`feedback ${type} show`;
-  el.textContent=msg;
+  const el=document.getElementById('feedback');el.className=`feedback ${type} show`;el.innerHTML=msg;
   clearTimeout(el._t);
-  if(type==='wrong' || type==='invalid') el._t=setTimeout(()=>el.classList.remove('show'),2000);
+  if(type==='wrong'||type==='invalid') el._t=setTimeout(()=>el.classList.remove('show'),2200);
+}
+function shakeInput(){
+  const w=document.getElementById('input-wrap');w.classList.remove('invalid');void w.offsetWidth;w.classList.add('invalid');
+  setTimeout(()=>w.classList.remove('invalid'),500);
 }
 
-function getActualScale(element){
-  const transform = window.getComputedStyle(element).transform;
-  if(transform === 'none'){
-    return 1;
-  }
-  const values = transform.match(/matrix(?:3d)?\(([^)]+)\)/);
-  if(!values) return 1;
-  const parts = values[1].split(',').map(parseFloat);
-  if(parts.length >= 6){
-    const a = parts[0];
-    const b = parts[1];
-    return Math.sqrt(a*a + b*b);
-  }
-  return 1;
+/* ─ REVEAL ─ */
+function getActualScale(el){
+  const t=window.getComputedStyle(el).transform;if(t==='none') return 1;
+  const v=t.match(/matrix(?:3d)?\(([^)]+)\)/);if(!v) return 1;
+  const p=v[1].split(',').map(parseFloat);
+  return p.length>=6?Math.sqrt(p[0]*p[0]+p[1]*p[1]):1;
 }
-
 function startRevealAnimation(){
-  const img = document.getElementById('hero-img');
-  const canvas = document.getElementById('pixel-canvas');
-  const hasBlur = activeFilters.has('blur');
-  const hasPixel = activeFilters.has('pixel');
-  
-  if(!hasBlur && !hasPixel){
-    return;
-  }
-  
-  const startScale = getActualScale(img);
-  const targetScale = ZOOM_END;
-  const startTime = performance.now();
-  const duration = 1200;
-  
-  function animateFrame(currentTime){
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    
-    const eased = 1 - Math.pow(1 - progress, 2.5);
-    const currentScale = startScale + (targetScale - startScale) * eased;
-    
-    const t = (ZOOM_START - currentScale) / (ZOOM_START - ZOOM_END);
-    const clampedT = Math.max(0, Math.min(1, t));
-    const blurVal = BLUR_MIN + (BLUR_MAX - BLUR_MIN) * clampedT;
-    const pixelSize = PIXEL_SIZE_MIN + (PIXEL_SIZE_MAX - PIXEL_SIZE_MIN) * clampedT;
-    
+  const img=document.getElementById('hero-img');
+  const canvas=document.getElementById('pixel-canvas');
+  const hasBlur=activeFilters.has('blur'),hasPixel=activeFilters.has('pixel');
+  if(!hasBlur&&!hasPixel) return;
+  const startScale=getActualScale(img),startTime=performance.now(),duration=1200;
+  function animateFrame(ct){
+    const elapsed=ct-startTime,progress=Math.min(elapsed/duration,1);
+    const eased=1-Math.pow(1-progress,2.5);
+    const currentScale=startScale+(ZOOM_END-startScale)*eased;
+    const t=Math.max(0,Math.min(1,(ZOOM_START-currentScale)/(ZOOM_START-ZOOM_END)));
+    const blurVal=BLUR_MIN+(BLUR_MAX-BLUR_MIN)*t;
+    const pixelSize=PIXEL_SIZE_MIN+(PIXEL_SIZE_MAX-PIXEL_SIZE_MIN)*t;
     if(hasBlur){
-      let cssFilters = [];
-      activeFilters.forEach(k=>{
-        if(k === 'blur'){
-          cssFilters.push(`blur(${blurVal.toFixed(2)}px)`);
-        } else if(FILTERS_DEF[k] && FILTERS_DEF[k].css){
-          cssFilters.push(FILTERS_DEF[k].css);
-        }
+      let cssF=[];activeFilters.forEach(k=>{
+        if(k==='blur') cssF.push(`blur(${blurVal.toFixed(2)}px)`);
+        else if(FILTERS_DEF[k]&&FILTERS_DEF[k].css) cssF.push(FILTERS_DEF[k].css);
       });
-      img.style.filter = cssFilters.join(' ');
-      if(hasPixel){
-        canvas.style.filter = cssFilters.join(' ');
-      }
+      img.style.filter=cssF.join(' ');if(hasPixel) canvas.style.filter=cssF.join(' ');
     }
-    
-    if(hasPixel){
-      drawPixelCanvasWithScale(currentScale, pixelSize);
-    }
-    
-    if(progress < 1){
-      revealAnimId = requestAnimationFrame(animateFrame);
-    } else {
-      revealAnimId = null;
-      applyImageFilters();
-    }
+    if(hasPixel) drawPixelCanvasWithScale(currentScale,pixelSize);
+    if(progress<1) revealAnimId=requestAnimationFrame(animateFrame);
+    else{revealAnimId=null;applyImageFilters();}
   }
-  
-  revealAnimId = requestAnimationFrame(animateFrame);
+  revealAnimId=requestAnimationFrame(animateFrame);
 }
-
-function drawPixelCanvasWithScale(scale, pixelSize){
-  const img = document.getElementById('hero-img');
-  const canvas = document.getElementById('pixel-canvas');
-  const wrapper = document.getElementById('img-wrapper');
-  const W = wrapper.offsetWidth || 480;
-  const H = wrapper.offsetHeight || 480;
-  canvas.width = W;
-  canvas.height = H;
-  const ctx = canvas.getContext('2d');
-
-  const factor = scale>1?(scale-1)/(ZOOM_START-1):0;
-  const ix = (img._ix||0)*factor / 100;
-  const iy = (img._iy||0)*factor / 100;
-  const fx = (img._flipX||1);
-  const fy = (img._flipY||1);
-
-  const tempCanvas = document.createElement('canvas');
-  tempCanvas.width = W;
-  tempCanvas.height = H;
-  const tempCtx = tempCanvas.getContext('2d');
-
-  const imgAR = img.naturalWidth / img.naturalHeight;
-  const wrapAR = W / H;
-  let sx, sy, sw, sh;
-  if (imgAR > wrapAR) {
-    sh = img.naturalHeight;
-    sw = sh * wrapAR;
-    sx = (img.naturalWidth - sw) / 2;
-    sy = 0;
-  } else {
-    sw = img.naturalWidth;
-    sh = sw / wrapAR;
-    sx = 0;
-    sy = (img.naturalHeight - sh) / 2;
-  }
-  tempCtx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
-
-  const PIXEL_SIZE = Math.max(1, Math.floor(pixelSize));
-  const pW = Math.max(1, Math.ceil(W / PIXEL_SIZE));
-  const pH = Math.max(1, Math.ceil(H / PIXEL_SIZE));
-  const pixelCanvas = document.createElement('canvas');
-  pixelCanvas.width = pW;
-  pixelCanvas.height = pH;
-  const pixelCtx = pixelCanvas.getContext('2d');
-  pixelCtx.imageSmoothingEnabled = false;
-  pixelCtx.drawImage(tempCanvas, 0, 0, W, H, 0, 0, pW, pH);
-
-  ctx.save();
-  ctx.imageSmoothingEnabled = false;
-  ctx.translate(W/2, H/2);
-  ctx.scale(scale * fx, scale * fy);
-  ctx.translate(-W/2 + ix * W, -H/2 + iy * H);
-  ctx.drawImage(pixelCanvas, 0, 0, pW, pH, 0, 0, W, H);
+function drawPixelCanvasWithScale(scale,pixelSize){
+  const img=document.getElementById('hero-img');
+  const canvas=document.getElementById('pixel-canvas');
+  const wrapper=document.getElementById('img-wrapper');
+  const W=wrapper.offsetWidth||480,H=wrapper.offsetHeight||480;
+  canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  const factor=scale>1?(scale-1)/(ZOOM_START-1):0;
+  const ix=(img._ix||0)*factor/100,iy=(img._iy||0)*factor/100;
+  const fx=(img._flipX||1),fy=(img._flipY||1);
+  const tmp=document.createElement('canvas');tmp.width=W;tmp.height=H;
+  const tCtx=tmp.getContext('2d');
+  const imgAR=img.naturalWidth/img.naturalHeight,wrapAR=W/H;
+  let sx,sy,sw,sh;
+  if(imgAR>wrapAR){sh=img.naturalHeight;sw=sh*wrapAR;sx=(img.naturalWidth-sw)/2;sy=0;}
+  else{sw=img.naturalWidth;sh=sw/wrapAR;sx=0;sy=(img.naturalHeight-sh)/2;}
+  tCtx.drawImage(img,sx,sy,sw,sh,0,0,W,H);
+  const PS=Math.max(1,Math.floor(pixelSize));
+  const pW=Math.max(1,Math.ceil(W/PS)),pH=Math.max(1,Math.ceil(H/PS));
+  const pCanvas=document.createElement('canvas');pCanvas.width=pW;pCanvas.height=pH;
+  const pCtx=pCanvas.getContext('2d');pCtx.imageSmoothingEnabled=false;
+  pCtx.drawImage(tmp,0,0,W,H,0,0,pW,pH);
+  ctx.save();ctx.imageSmoothingEnabled=false;
+  ctx.translate(W/2,H/2);ctx.scale(scale*fx,scale*fy);
+  ctx.translate(-W/2+ix*W,-H/2+iy*H);
+  ctx.drawImage(pCanvas,0,0,pW,pH,0,0,W,H);
   ctx.restore();
 }
 
@@ -1509,387 +1769,438 @@ function revealAnswer(correct){
   revealed=true;
   const img=document.getElementById('hero-img');
   img.style.transition='transform 1s cubic-bezier(.25,.46,.45,.94)';
-  const fx_r=(img._flipX||1); const fy_r=(img._flipY||1);
-  img.style.transform=`scale(${fx_r}, ${fy_r}) translate(0%,0%)`;
-
+  const fx=(img._flipX||1),fy=(img._flipY||1);
+  img.style.transform=`scale(${fx},${fy}) translate(0%,0%)`;
   document.getElementById('guess-input').disabled=true;
   document.getElementById('submit-btn').disabled=true;
   document.getElementById('input-wrap').classList.add('disabled-wrap');
   document.getElementById('reveal-hint-btn').style.display='none';
-
-  document.getElementById('hint-btn-role').disabled=true;
-  document.getElementById('hint-btn-lane').disabled=true;
-  document.getElementById('hint-btn-letter').disabled=true;
-
+  ['role','lane','letter'].forEach(k=>document.getElementById('hint-btn-'+k).disabled=true);
   updateHangmanDisplay(true);
   playSound('reveal');
-
-  if(activeFilters && activeFilters.size > 0){
-    startRevealAnimation();
-  }
-
+  if(activeFilters&&activeFilters.size>0) startRevealAnimation();
   const banner=document.getElementById('reveal-banner');
   banner.style.display='flex';
   document.getElementById('reveal-name').textContent=current.name;
-  document.getElementById('reveal-meta').textContent=
-    `${current.roles.join(' / ')}  |  ${current.lane.join(' / ')}`;
+
+  const ROLE_ICONS={
+    'Assassin':'images/role_icons/Assassin_Role_icon.png',
+    'Carry':'images/role_icons/Carry_Role_icon.png',
+    'Fighter':'images/role_icons/Fighter_Role_icon.png',
+    'Mage':'images/role_icons/Mage_Role_icon.png',
+    'Support':'images/role_icons/Support_Icon.png',
+    'Tank':'images/role_icons/Tank_Role_icon.png',
+  };
+  const LANE_ICONS={
+    'Abyssal Dragon':'images/lane_icons/Abyssal_Dragon_Lane_Icon.png',
+    'Dark Slayer':'images/lane_icons/Dark_Slayer_Lane_Icon.png',
+    'Jungle':'images/lane_icons/Jungle_Icon.png',
+    'Mid':'images/lane_icons/Middle_Icon.png',
+    'Roam':'images/lane_icons/Support_Icon.png',
+    'Support':'images/lane_icons/Support_Icon.png',
+  };
+
+  const metaDiv=document.getElementById('reveal-meta');
+  metaDiv.innerHTML='';
+
+  // Roles Group
+  const roleGroup=document.createElement('div');
+  roleGroup.className='meta-group';
+  const roleLabel=document.createElement('span');
+  roleLabel.className='meta-label';
+  roleLabel.textContent='ตำแหน่ง';
+  roleGroup.appendChild(roleLabel);
+  const roleTags=document.createElement('div');
+  roleTags.className='meta-tags';
+  current.roles.forEach(r=>{
+    const tag=document.createElement('span');
+    tag.className='meta-tag role-tag';
+    tag.title=r;
+    const iconSrc=Object.entries(ROLE_ICONS).find(([k])=>r.toLowerCase().includes(k.toLowerCase()))?.[1];
+    if(iconSrc){
+      const ic=document.createElement('img');
+      ic.src=iconSrc;ic.alt=r;
+      ic.style.cssText='width:18px;height:18px;object-fit:contain;vertical-align:middle;';
+      tag.appendChild(ic);
+    }
+    const t=document.createElement('span');
+    t.textContent=r;t.style.verticalAlign='middle';
+    tag.appendChild(t);
+    roleTags.appendChild(tag);
+  });
+  roleGroup.appendChild(roleTags);
+  metaDiv.appendChild(roleGroup);
+
+  // Lanes Group
+  const laneGroup=document.createElement('div');
+  laneGroup.className='meta-group';
+  const laneLabel=document.createElement('span');
+  laneLabel.className='meta-label';
+  laneLabel.textContent='เลน';
+  laneGroup.appendChild(laneLabel);
+  const laneTags=document.createElement('div');
+  laneTags.className='meta-tags';
+  current.lane.forEach(l=>{
+    const tag=document.createElement('span');
+    tag.className='meta-tag lane-tag';
+    tag.title=l;
+    const iconSrc=Object.entries(LANE_ICONS).find(([k])=>l.toLowerCase().includes(k.toLowerCase()))?.[1];
+    if(iconSrc){
+      const ic=document.createElement('img');
+      ic.src=iconSrc;ic.alt=l;
+      ic.style.cssText='width:18px;height:18px;object-fit:contain;vertical-align:middle;';
+      recolorTealToGold(ic);
+      tag.appendChild(ic);
+    }
+    const t=document.createElement('span');
+    t.textContent=l;t.style.verticalAlign='middle';
+    tag.appendChild(t);
+    laneTags.appendChild(tag);
+  });
+  laneGroup.appendChild(laneTags);
+  metaDiv.appendChild(laneGroup);
 }
 
 document.getElementById('reveal-hint-btn').addEventListener('click',()=>{
   if(!revealed){
-    sessionResults.push({hero:current,correct:false,wrongCount:wrongGuesses.length});
+    streak=0;updateStreakDisplay();
+    sessionResults.push({hero:current,correct:false,wrongCount:wrongGuesses.length,pts:0});
     revealAnswer(false);
   }
 });
-
 document.getElementById('next-btn').addEventListener('click',()=>{
   currentIdx++;
-  const img=document.getElementById('hero-img');
-  img._ix=null;img._iy=null;
-  playSound('click');
-  loadQuestion();
+  const img=document.getElementById('hero-img');img._ix=null;img._iy=null;
+  clearTimeout(pixelTimer);
+  if(revealAnimId){cancelAnimationFrame(revealAnimId);revealAnimId=null;}
+  resetFiltersForNewQuestion();
+  playSound('click');loadQuestion();
 });
-
 document.getElementById('skip-btn').addEventListener('click',()=>{
   if(revealed) return;
-  showToast(
-    'ข้ามตัวละครนี้?',
-    'คุณต้องการข้ามตัวละครนี้จริงๆ หรือ? จะไม่ได้รับคะแนน',
-    [
-      {label:'ยกเลิก', type:'secondary'},
-      {label:'ข้าม', type:'danger', onClick:()=>{
-        sessionResults.push({hero:current,correct:false,wrongCount:wrongGuesses.length});
-        revealAnswer(false);
-      }}
-    ]
-  );
+  showToast('ข้ามตัวละครนี้?','ถ้าข้ามจะไม่ได้รับคะแนน',
+    [{label:'ยกเลิก',type:'secondary'},{label:'ข้ามเลย',type:'danger',onClick:()=>{
+      streak=0;updateStreakDisplay();
+      sessionResults.push({hero:current,correct:false,wrongCount:wrongGuesses.length,pts:0});
+      revealAnswer(false);
+    }}]);
 });
-
 document.getElementById('end-game-btn').addEventListener('click',()=>{
-  showToast(
-    'จบเกมกลางคัน?',
-    `คุณต้องการจบเกมตอนนี้จริงๆ หรือ? (ตอบไปแล้ว ${currentIdx} / ${queue.length})`,
-    [
-      {label:'ยกเลิก', type:'secondary'},
-      {label:'จบเกม', type:'danger', onClick:()=>{
-        queue = queue.slice(0, currentIdx);
-        endGame();
-      }}
-    ]
-  );
+  showToast('จบเกมกลางคัน?',`ตอบไปแล้ว ${currentIdx} / ${queue.length} ตัวละคร`,
+    [{label:'ยกเลิก',type:'secondary'},{label:'จบเกม',type:'danger',onClick:()=>{
+      queue=queue.slice(0,currentIdx);endGame();
+    }}]);
 });
 
-// ---- HINTS SYSTEM ----
+/* ─ HINTS ─ */
 document.getElementById('hint-btn-role').addEventListener('click',()=>{
   if(revealed) return;
-  const el = document.getElementById('hint-role');
-  el.textContent = current.roles.join(' / ');
-  el.classList.remove('hidden');
-  document.getElementById('hint-btn-role').disabled=true;
-  document.getElementById('hint-btn-role').classList.add('used');
-  document.getElementById('hint-btn-role').textContent='✓ ดูแล้ว (-1)';
-  hintPenalty += 1;
+  const ROLE_ICONS={
+    'Assassin':'images/role_icons/Assassin_Role_icon.png',
+    'Carry':'images/role_icons/Carry_Role_icon.png',
+    'Fighter':'images/role_icons/Fighter_Role_icon.png',
+    'Mage':'images/role_icons/Mage_Role_icon.png',
+    'Support':'images/role_icons/Support_Icon.png',
+    'Tank':'images/role_icons/Tank_Role_icon.png',
+  };
+  const roleEl=document.getElementById('hint-role');
+  roleEl.innerHTML='';
+  current.roles.forEach((r,i)=>{
+    if(i>0){const sep=document.createElement('span');sep.textContent=' / ';roleEl.appendChild(sep);}
+    const iconSrc=Object.entries(ROLE_ICONS).find(([k])=>r.toLowerCase().includes(k.toLowerCase()))?.[1];
+    if(iconSrc){
+      const img=document.createElement('img');
+      img.src=iconSrc;
+      img.style.cssText='width:18px;height:18px;object-fit:contain;vertical-align:middle;margin-right:4px;';
+      recolorTealToGold(img);
+      roleEl.appendChild(img);
+    }
+    const t=document.createElement('span');t.textContent=r;roleEl.appendChild(t);
+  });
+  roleEl.classList.remove('hidden');
+  const b=document.getElementById('hint-btn-role');
+  b.disabled=true;b.classList.add('used');
+  b.innerHTML='<span class="hint-btn-icon"><i class="fa-solid fa-circle-check"></i></span><span>ดูตำแหน่งแล้ว</span>';
+  hintPenalty+=1;
+  // บันทึกสถิติ
+  gameHintStats.role++;
+  gameHintStats.total++;
   playSound('hint');
 });
-
 document.getElementById('hint-btn-lane').addEventListener('click',()=>{
   if(revealed) return;
-  const el = document.getElementById('hint-lane');
-  el.textContent = current.lane.join(' / ');
-  el.classList.remove('hidden');
-  document.getElementById('hint-btn-lane').disabled=true;
-  document.getElementById('hint-btn-lane').classList.add('used');
-  document.getElementById('hint-btn-lane').textContent='✓ ดูแล้ว (-1)';
-  hintPenalty += 1;
+  const LANE_ICONS={
+    'Abyssal Dragon':'images/lane_icons/Abyssal_Dragon_Lane_Icon.png',
+    'Dark Slayer':'images/lane_icons/Dark_Slayer_Lane_Icon.png',
+    'Jungle':'images/lane_icons/Jungle_Icon.png',
+    'Mid':'images/lane_icons/Middle_Icon.png',
+    'Roam':'images/lane_icons/Support_Icon.png',
+    'Support':'images/lane_icons/Support_Icon.png',
+  };
+  const laneEl=document.getElementById('hint-lane');
+  laneEl.innerHTML='';
+  current.lane.forEach((l,i)=>{
+    if(i>0){const sep=document.createElement('span');sep.textContent=' / ';laneEl.appendChild(sep);}
+    const iconSrc=Object.entries(LANE_ICONS).find(([k])=>l.toLowerCase().includes(k.toLowerCase()))?.[1];
+    if(iconSrc){
+      const img=document.createElement('img');
+      img.src=iconSrc;
+      img.style.cssText='width:18px;height:18px;object-fit:contain;vertical-align:middle;margin-right:4px;';
+      recolorTealToGold(img);
+      laneEl.appendChild(img);
+    }
+    const t=document.createElement('span');t.textContent=l;laneEl.appendChild(t);
+  });
+  laneEl.classList.remove('hidden');
+  const b=document.getElementById('hint-btn-lane');
+  b.disabled=true;b.classList.add('used');
+  b.innerHTML='<span class="hint-btn-icon"><i class="fa-solid fa-circle-check"></i></span><span>ดูเลนแล้ว</span>';
+  hintPenalty+=1;
+  // บันทึกสถิติ
+  gameHintStats.lane++;
+  gameHintStats.total++;
   playSound('hint');
 });
-
 document.getElementById('hint-btn-letter').addEventListener('click',()=>{
   if(revealed) return;
-  const name = current.name;
-  const unrevealed = [];
-  for(let i=0;i<name.length;i++){
-    if(!revealedLetters.has(i) && name[i]!==' '){
-      unrevealed.push(i);
-    }
-  }
+  const name=current.name;
+  const unrevealed=[];
+  for(let i=0;i<name.length;i++){if(!revealedLetters.has(i)&&name[i]!==' ') unrevealed.push(i);}
   if(unrevealed.length===0){
-    document.getElementById('hint-btn-letter').disabled=true;
-    document.getElementById('hint-btn-letter').classList.add('used');
-    document.getElementById('hint-btn-letter').textContent='✓ ครบแล้ว (-2)';
-    return;
+    const b=document.getElementById('hint-btn-letter');b.disabled=true;b.classList.add('used');
+    b.innerHTML='<span class="hint-btn-icon"><i class="fa-solid fa-circle-check"></i></span><span>ครบทุกตัวแล้ว</span>';return;
   }
-  const randIdx = unrevealed[Math.floor(Math.random()*unrevealed.length)];
-  revealedLetters.add(randIdx);
-  updateHangmanDisplay();
-  hintPenalty += 2;
+  const idx=unrevealed[Math.floor(Math.random()*unrevealed.length)];
+  revealedLetters.add(idx);updateHangmanDisplay();hintPenalty+=2;
+  // บันทึกสถิติ
+  gameHintStats.letter++;
+  gameHintStats.total++;
   playSound('hint');
-  
-  if(revealedLetters.size >= name.replace(/\s/g,'').length){
-    document.getElementById('hint-btn-letter').disabled=true;
-    document.getElementById('hint-btn-letter').classList.add('used');
-    document.getElementById('hint-btn-letter').textContent='✓ ครบแล้ว (-2)';
+  if(revealedLetters.size>=name.replace(/\s/g,'').length){
+    const b=document.getElementById('hint-btn-letter');b.disabled=true;b.classList.add('used');
+    b.innerHTML='<span class="hint-btn-icon"><i class="fa-solid fa-circle-check"></i></span><span>ครบทุกตัวแล้ว</span>';
   }
 });
-
 function updateHangmanDisplay(showAll=false){
-  const name = current.name;
-  const display = document.getElementById('hangman-display');
-  display.innerHTML = '';
-  
+  const name=current.name;
+  const display=document.getElementById('hangman-display');display.innerHTML='';
   for(let i=0;i<name.length;i++){
-    if(name[i]===' '){
-      const space = document.createElement('span');
-      space.className = 'hm-space';
-      display.appendChild(space);
-    } else if(showAll || revealedLetters.has(i)){
-      const char = document.createElement('span');
-      char.className = 'hm-char';
-      char.textContent = name[i];
-      display.appendChild(char);
-    } else {
-      const hidden = document.createElement('span');
-      hidden.className = 'hm-hidden';
-      hidden.textContent = '·';
-      display.appendChild(hidden);
+    if(name[i]===' '){const s=document.createElement('span');s.className='hm-space';display.appendChild(s);}
+    else if(showAll||revealedLetters.has(i)){
+      const c=document.createElement('span');c.className='hm-char';c.textContent=name[i];display.appendChild(c);
+    }else{
+      const h=document.createElement('span');h.className='hm-hidden';h.textContent='·';display.appendChild(h);
     }
   }
 }
 
-// ---- END GAME ----
+/* ─ END GAME ─ */
 function endGame(){
   document.getElementById('game').style.display='none';
-  const res=document.getElementById('result');
-  res.style.display='flex';
+  const res=document.getElementById('result');res.style.display='flex';
   document.getElementById('res-score').textContent=score;
   const correct=sessionResults.filter(r=>r.correct).length;
   const total=sessionResults.length;
   const pct=total?correct/total:0;
   document.getElementById('res-title').textContent=
-    pct===1?'สมบูรณ์แบบ!':pct>=.7?'เก่งมาก!':pct>=.4?'พอใช้ได้!':'ฝึกฝนอีกนิด!';
-  document.getElementById('res-sub').textContent=`ตอบถูก ${correct} / ${total} ตัวละคร`;
+    pct===1?'🏆 สมบูรณ์แบบ!':pct>=.8?'⭐ เก่งมาก!':pct>=.6?'👍 ดีมาก!':pct>=.4?'💪 พอใช้ได้!':'🌱 ฝึกอีกนิด!';
+  document.getElementById('res-sub').textContent=`ตอบถูก ${correct} จาก ${total} ตัวละคร`;
+  document.getElementById('res-correct').textContent=correct;
+  document.getElementById('res-wrong').textContent=total-correct;
+  document.getElementById('res-streak').textContent=maxStreak;
+  if(pct>=.7){createConfetti();playSound('correct');}
   
-  if(pct>=.7){
-    createConfetti();
-    playSound('correct');
-  }
+  // แสดงสถิติคำใบ้
+  renderHintStats();
   
-  const grid=document.getElementById('result-grid');
-  grid.innerHTML='';
+  const grid=document.getElementById('result-grid');grid.innerHTML='';
   sessionResults.forEach(r=>{
-    const card=document.createElement('div');
-    card.className='hero-card '+(r.correct?'correct-card':'wrong-card');
-    const tick=document.createElement('div');
-    tick.className='tick';tick.textContent=r.correct?'V':'X';
+    const card=document.createElement('div');card.className='hero-card '+(r.correct?'correct-card':'wrong-card');
+    const tick=document.createElement('div');tick.className='tick';tick.textContent=r.correct?'✓':'✕';
     card.appendChild(tick);
-    const img=document.createElement('img');
-    img.src=r.hero.skins[0].image;img.alt='';
-    card.appendChild(img);
-    const nm=document.createElement('div');
-    nm.className='hname';nm.textContent=r.hero.name;
-    card.appendChild(nm);
+    const img=document.createElement('img');img.src=r.hero.skins[0].image;img.alt='';card.appendChild(img);
+    const nm=document.createElement('div');nm.className='hname';nm.textContent=r.hero.name;card.appendChild(nm);
     grid.appendChild(card);
   });
 }
 
-// ---- SETTINGS BUTTON ----
-const filterPanel=document.getElementById('img-filter-panel');
-
-function toggleFilterPanel(e){
-  if(e) e.stopPropagation();
-  const isOpen = filterPanel.style.display === 'block';
-  filterPanel.style.display = isOpen ? 'none' : 'block';
-  playSound('click');
-}
-
-document.getElementById('img-filter-close').addEventListener('click',(e)=>{
-  e.stopPropagation();
-  filterPanel.style.display = 'none';
-  playSound('click');
-});
-
-const setupSettingsBtn = document.getElementById('setup-settings-btn');
-const gameSettingsBtn = document.getElementById('settings-btn');
-
-if(setupSettingsBtn){
-  setupSettingsBtn.addEventListener('click', toggleFilterPanel);
-}
-if(gameSettingsBtn){
-  gameSettingsBtn.addEventListener('click', toggleFilterPanel);
-}
-
-document.addEventListener('click',(e)=>{
-  if(filterPanel.style.display==='block' &&
-     !filterPanel.contains(e.target) &&
-     e.target.id !== 'settings-btn' &&
-     e.target.id !== 'setup-settings-btn' &&
-     e.target.id !== 'img-filter-close'){
-      filterPanel.style.display='none';
+function renderHintStats(){
+  const content=document.getElementById('hint-stats-content');
+  content.innerHTML='';
+  
+  if(gameHintStats.total===0){
+    const empty=document.createElement('div');
+    empty.className='hint-stats-empty';
+    empty.innerHTML='<i class="fa-solid fa-circle-check" style="color:var(--green);margin-right:6px"></i> ไม่มีการใช้คำใบ้เลย — เก่งมาก!';
+    content.appendChild(empty);
+    return;
   }
-});
+  
+  // Summary - ปรับ layout ใหม่
+  const summary=document.createElement('div');
+  summary.className='hint-stats-summary';
+  
+  const numberDiv=document.createElement('div');
+  numberDiv.className='hint-stats-number';
+  numberDiv.innerHTML=`<div class="hint-stats-total">${gameHintStats.total}</div><div class="hint-stats-total-label">ครั้ง</div>`;
+  
+  const penaltyDiv=document.createElement('div');
+  penaltyDiv.className='hint-stats-penalty';
+  const totalPenalty=(gameHintStats.role + gameHintStats.lane) + gameHintStats.letter * 2;
+  penaltyDiv.innerHTML=`
+    <div class="hint-stats-penalty-text">รวมทั้งหมด<br>หักคะแนนไป <span style="color:var(--red);font-weight:700">${totalPenalty}</span> คะแนน</div>
+  `;
+  
+  summary.appendChild(numberDiv);
+  summary.appendChild(penaltyDiv);
+  content.appendChild(summary);
+  
+  // Breakdown
+  const breakdown=document.createElement('div');
+  breakdown.className='hint-stats-breakdown';
+  
+  // Role
+  const roleItem=document.createElement('div');
+  roleItem.className='hint-stat-item';
+  roleItem.innerHTML=`
+    <img class="hs-icon" src="images/role_icons/Fighter_Role_icon.png" alt="role">
+    <div class="hs-val">${gameHintStats.role}</div>
+    <div class="hs-label">ดูตำแหน่ง</div>
+  `;
+  breakdown.appendChild(roleItem);
+  
+  // Lane
+  const laneItem=document.createElement('div');
+  laneItem.className='hint-stat-item';
+  laneItem.innerHTML=`
+    <img class="hs-icon" src="images/lane_icons/Middle_Icon.png" alt="lane">
+    <div class="hs-val">${gameHintStats.lane}</div>
+    <div class="hs-label">ดูเลน</div>
+  `;
+  breakdown.appendChild(laneItem);
+  
+  // Letter
+  const letterItem=document.createElement('div');
+  letterItem.className='hint-stat-item';
+  letterItem.innerHTML=`
+    <i class="fa-solid fa-font hs-icon fa-icon"></i>
+    <div class="hs-val">${gameHintStats.letter}</div>
+    <div class="hs-label">สุ่มตัวอักษร</div>
+  `;
+  breakdown.appendChild(letterItem);
+  
+  content.appendChild(breakdown);
+}
 
-// ---- IMAGE FILTERS ----
-const FILTERS_DEF = {
-  grayscale: { label:'ขาวดำ',  css:'grayscale(1)' },
-  invert:    { label:'กลับสี', css:'invert(1)' },
-  sepia:     { label:'Sepia',  css:'sepia(1)' },
-  hue:       { label:'หมุนสี', css:'hue-rotate(180deg)' },
-  'flip-h':  { label:'กลับซ้าย-ขวา', css:null },
-  'flip-v':  { label:'กลับบน-ล่าง',  css:null },
-  pixel:     { label:'Pixel',  css:null },
-  blur:      { label:'เบลอ',   css:null },
+/* ─ FILTER PANEL ─ */
+const filterPanel=document.getElementById('img-filter-panel');
+const filterOverlay=document.getElementById('filter-overlay');
+
+function openFilterPanel(){
+  filterPanel.classList.add('show');filterOverlay.classList.add('show');playSound('click');
+}
+function closeFilterPanel(){
+  filterPanel.classList.remove('show');filterOverlay.classList.remove('show');
+}
+document.getElementById('img-filter-close').addEventListener('click',closeFilterPanel);
+filterOverlay.addEventListener('click',closeFilterPanel);
+document.getElementById('setup-settings-btn').addEventListener('click',openFilterPanel);
+document.getElementById('settings-btn').addEventListener('click',openFilterPanel);
+
+/* ─ IMAGE FILTERS ─ */
+const FILTERS_DEF={
+  grayscale:{label:'ขาวดำ',css:'grayscale(1)'},
+  invert:{label:'กลับสี',css:'invert(1)'},
+  sepia:{label:'Sepia',css:'sepia(1)'},
+  hue:{label:'หมุนสี',css:'hue-rotate(180deg)'},
+  'flip-h':{label:'ซ้าย-ขวา',css:null},
+  'flip-v':{label:'บน-ล่าง',css:null},
+  pixel:{label:'Pixel',css:null},
+  blur:{label:'เบลอ',css:null},
 };
-
-let activeFilters = new Set();
-let pixelTimer = null;
+let activeFilters=new Set();
+let pixelTimer=null;
 
 document.querySelectorAll('.flt-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    const key = btn.dataset.filter;
-    if(activeFilters.has(key)){
-      activeFilters.delete(key);
-      btn.classList.remove('active');
-    } else {
-      activeFilters.add(key);
-      btn.classList.add('active');
-    }
-    applyImageFilters();
-    playSound('click');
+  btn.addEventListener('click',()=>{
+    const key=btn.dataset.filter;
+    if(activeFilters.has(key)){activeFilters.delete(key);btn.classList.remove('active');}
+    else{activeFilters.add(key);btn.classList.add('active');}
+    applyImageFilters();playSound('click');
   });
 });
-
-document.getElementById('flt-clear-btn').addEventListener('click', ()=>{
-  activeFilters.clear();
-  document.querySelectorAll('.flt-btn').forEach(b=>b.classList.remove('active'));
-  applyImageFilters();
-  playSound('click');
+document.getElementById('flt-clear-btn').addEventListener('click',()=>{
+  activeFilters.clear();document.querySelectorAll('.flt-btn').forEach(b=>b.classList.remove('active'));
+  applyImageFilters();playSound('click');
 });
 
 function getCurrentScale(){
   if(revealed) return ZOOM_END;
-  return Math.max(ZOOM_END, ZOOM_START - (ZOOM_START-ZOOM_END)*(wrongGuesses.length/MAX_ATTEMPTS));
+  return Math.max(ZOOM_END,ZOOM_START-(ZOOM_START-ZOOM_END)*(wrongGuesses.length/MAX_ATTEMPTS));
 }
-
 function getDynamicBlur(){
-  const scale = getCurrentScale();
-  const t = (ZOOM_START - scale) / (ZOOM_START - ZOOM_END);
-  return BLUR_MIN + (BLUR_MAX - BLUR_MIN) * t;
+  const scale=getCurrentScale();
+  return BLUR_MIN+(BLUR_MAX-BLUR_MIN)*((ZOOM_START-scale)/(ZOOM_START-ZOOM_END));
 }
-
 function getDynamicPixelSize(){
-  const scale = getCurrentScale();
-  const t = (ZOOM_START - scale) / (ZOOM_START - ZOOM_END);
-  return PIXEL_SIZE_MIN + (PIXEL_SIZE_MAX - PIXEL_SIZE_MIN) * t;
+  const scale=getCurrentScale();
+  return PIXEL_SIZE_MIN+(PIXEL_SIZE_MAX-PIXEL_SIZE_MIN)*((ZOOM_START-scale)/(ZOOM_START-ZOOM_END));
 }
-
 function applyImageFilters(){
-  const img = document.getElementById('hero-img');
-  const canvas = document.getElementById('pixel-canvas');
-
-  let cssFilters = [];
-  const blurVal = getDynamicBlur();
+  const img=document.getElementById('hero-img');
+  const canvas=document.getElementById('pixel-canvas');
+  let cssFilters=[];const blurVal=getDynamicBlur();
   activeFilters.forEach(k=>{
-    if(k === 'blur') {
-      cssFilters.push(`blur(${blurVal.toFixed(2)}px)`);
-    } else if(FILTERS_DEF[k] && FILTERS_DEF[k].css) {
-      cssFilters.push(FILTERS_DEF[k].css);
-    }
+    if(k==='blur') cssFilters.push(`blur(${blurVal.toFixed(2)}px)`);
+    else if(FILTERS_DEF[k]&&FILTERS_DEF[k].css) cssFilters.push(FILTERS_DEF[k].css);
   });
-  img.style.filter = cssFilters.join(' ');
-
-  let flipX = activeFilters.has('flip-h') ? -1 : 1;
-  let flipY = activeFilters.has('flip-v') ? -1 : 1;
-  img._flipX = flipX;
-  img._flipY = flipY;
+  img.style.filter=cssFilters.join(' ');
+  img._flipX=activeFilters.has('flip-h')?-1:1;
+  img._flipY=activeFilters.has('flip-v')?-1:1;
   reapplyZoomWithFlip();
-
   if(activeFilters.has('pixel')){
-    canvas.style.display = 'block';
-    img.style.visibility = 'hidden';
-    canvas.style.zIndex = '2';
+    canvas.style.display='block';img.style.visibility='hidden';canvas.style.zIndex='2';
     schedulePixelDraw();
-  } else {
-    canvas.style.display = 'none';
-    img.style.visibility = 'visible';
-    clearTimeout(pixelTimer);
-  }
-
-  const indicator = document.getElementById('img-filter-indicator');
-  const badgeWrap = document.getElementById('filter-active-badges');
-  
-  indicator.innerHTML = '';
-  badgeWrap.innerHTML = '';
-  
-  if(activeFilters.size === 0){
-    const noFilter = document.createElement('span');
-    noFilter.className = 'no-filter-text';
-    noFilter.textContent = 'ยังไม่ได้เลือกฟิลเตอร์';
-    badgeWrap.appendChild(noFilter);
-  } else {
+  }else{canvas.style.display='none';img.style.visibility='visible';clearTimeout(pixelTimer);}
+  const indicator=document.getElementById('img-filter-indicator');
+  const badgeWrap=document.getElementById('filter-active-badges');
+  indicator.innerHTML='';badgeWrap.innerHTML='';
+  if(activeFilters.size===0){
+    const no=document.createElement('span');no.className='no-filter-text';no.textContent='ยังไม่ได้เลือกฟิลเตอร์';badgeWrap.appendChild(no);
+  }else{
     activeFilters.forEach(k=>{
-      const lbl = FILTERS_DEF[k] ? FILTERS_DEF[k].label : k;
-      
-      const b1 = document.createElement('div');
-      b1.className='fi-badge'; 
-      b1.textContent=lbl;
-      indicator.appendChild(b1);
-      
-      const b2 = document.createElement('div');
-      b2.className='filter-badge'; 
-      b2.textContent=lbl;
-      badgeWrap.appendChild(b2);
+      const lbl=FILTERS_DEF[k]?FILTERS_DEF[k].label:k;
+      const b1=document.createElement('div');b1.className='fi-badge';b1.textContent=lbl;indicator.appendChild(b1);
+      const b2=document.createElement('div');b2.className='filter-badge';b2.textContent=lbl;badgeWrap.appendChild(b2);
     });
   }
 }
-
 function reapplyZoomWithFlip(){
-  const img = document.getElementById('hero-img');
-  const scale = getCurrentScale();
-  const factor = scale>1?(scale-1)/(ZOOM_START-1):0;
-  const ix = (img._ix||0)*factor;
-  const iy = (img._iy||0)*factor;
-  const fx = (img._flipX||1);
-  const fy = (img._flipY||1);
-  img.style.transform = `scale(${scale*fx}, ${scale*fy}) translate(${ix}%,${iy}%)`;
+  const img=document.getElementById('hero-img');
+  const scale=getCurrentScale();
+  const m=safeOffset(scale);
+  const ix=Math.max(-m,Math.min(m,img._ix||0));
+  const iy=Math.max(-m,Math.min(m,img._iy||0));
+  const fx=(img._flipX||1),fy=(img._flipY||1);
+  img.style.transform=`scale(${scale*fx},${scale*fy}) translate(${ix}%,${iy}%)`;
 }
-
 function schedulePixelDraw(){
   clearTimeout(pixelTimer);
-  const img = document.getElementById('hero-img');
-  if(!img.naturalWidth){
-    pixelTimer = setTimeout(schedulePixelDraw, 100);
-    return;
-  }
-  drawPixelCanvas();
-  pixelTimer = setTimeout(schedulePixelDraw, 300);
+  const img=document.getElementById('hero-img');
+  if(!img.naturalWidth){pixelTimer=setTimeout(schedulePixelDraw,100);return;}
+  drawPixelCanvas();pixelTimer=setTimeout(schedulePixelDraw,300);
 }
-
 function drawPixelCanvas(){
-  const scale = getCurrentScale();
-  const pixelSize = getDynamicPixelSize();
-  drawPixelCanvasWithScale(scale, pixelSize);
+  drawPixelCanvasWithScale(getCurrentScale(),getDynamicPixelSize());
 }
-
 function resetFiltersForNewQuestion(){
-  document.querySelectorAll('.flt-btn').forEach(btn=>{
-    btn.classList.toggle('active', activeFilters.has(btn.dataset.filter));
-  });
-  const img = document.getElementById('hero-img');
-  img._flipX = activeFilters.has('flip-h')?-1:1;
-  img._flipY = activeFilters.has('flip-v')?-1:1;
-  img.onload = ()=>{ applyImageFilters(); };
-  setTimeout(applyImageFilters, 200);
+  document.querySelectorAll('.flt-btn').forEach(btn=>{btn.classList.toggle('active',activeFilters.has(btn.dataset.filter));});
+  const img=document.getElementById('hero-img');
+  img._flipX=activeFilters.has('flip-h')?-1:1;
+  img._flipY=activeFilters.has('flip-v')?-1:1;
+  img.onload=()=>applyImageFilters();
+  setTimeout(applyImageFilters,200);
 }
-
-document.getElementById('next-btn').addEventListener('click',()=>{
-  clearTimeout(pixelTimer);
-  if(revealAnimId){
-    cancelAnimationFrame(revealAnimId);
-    revealAnimId = null;
-  }
-  resetFiltersForNewQuestion();
-}, true);
-
 document.getElementById('replay-btn').addEventListener('click',()=>{
   document.getElementById('result').style.display='none';
   document.getElementById('setup').style.display='flex';
